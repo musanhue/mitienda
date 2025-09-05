@@ -26,6 +26,15 @@
     </header>
 
     <main class="container mx-auto p-4 lg:p-6">
+        <section id="user-orders-section" class="mb-6 hidden">
+            <div class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 rounded-lg shadow-md">
+                <h3 class="font-bold">Tus números de pedido recientes:</h3>
+                <div id="user-orders-list" class="flex flex-wrap gap-x-4 gap-y-2 mt-2 font-mono">
+                    <!-- Order numbers will be injected here -->
+                </div>
+            </div>
+        </section>
+
         <section id="cliente-view">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold mb-2">Nuestros Productos</h1>
@@ -92,7 +101,23 @@
         let cart = {};
         let productsCache = {};
 
-        document.addEventListener('DOMContentLoaded', fetchProducts);
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            displayUserOrders();
+        });
+
+        function displayUserOrders() {
+            const orders = JSON.parse(localStorage.getItem('myOrders')) || [];
+            const container = document.getElementById('user-orders-section');
+            const listEl = document.getElementById('user-orders-list');
+
+            if (orders.length > 0) {
+                listEl.innerHTML = orders.map(orderNum => `<span class="bg-indigo-200 px-2 py-1 rounded-md text-sm">${orderNum}</span>`).join('');
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
 
         function fetchProducts() {
             onSnapshot(productCollection, (snapshot) => {
@@ -195,7 +220,7 @@
                     transaction.update(counterRef, { currentNumber: newNumber });
                     return newNumber;
                 });
-                return newOrderNumber.toString().padStart(5, '0');
+                return newOrderNumber.toString();
             } catch (e) {
                 console.error("Transaction for order number failed: ", e);
                 return Date.now().toString(); // Fallback
@@ -218,6 +243,12 @@
                 await addDoc(orderCollection, {
                     orderNumber: orderNumber, items: orderItems, total: total, status: 'Pendiente de Pago', createdAt: serverTimestamp()
                 });
+
+                // Save order to localStorage and update UI
+                const myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+                myOrders.push(orderNumber);
+                localStorage.setItem('myOrders', JSON.stringify(myOrders));
+                displayUserOrders();
 
                 document.getElementById('order-number').textContent = orderNumber;
                 const summaryEl = document.getElementById('order-summary-modal');
