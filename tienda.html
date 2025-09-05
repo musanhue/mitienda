@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - MiNegocio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 lg:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-2xl font-bold text-indigo-600">MiNegocio</a>
+                <div class="flex items-center">
+                     <button id="cart-button" class="relative">
+                        <i class="fas fa-shopping-cart text-xl text-gray-600 hover:text-indigo-600"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 lg:p-6">
+        <!-- Vista del Cliente -->
+        <section id="cliente-view">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-2">Nuestros Productos</h1>
+                <p class="text-gray-600">Explora nuestro catálogo y haz tu pedido.</p>
+            </div>
+             <!-- Buscador de pedidos -->
+            <div class="mb-8 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Seguimiento de Pedido</h3>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input type="text" id="track-order-input" placeholder="Ingresa tu número de pedido" class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button id="track-order-btn" class="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition duration-300 font-semibold">Buscar Pedido</button>
+                </div>
+                <div id="order-status-result" class="mt-4"></div>
+            </div>
+            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Los productos se cargarán aquí -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- Modal del Carrito -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-6">Tu Carrito</h2>
+            <div id="cart-items" class="space-y-4 max-h-64 overflow-y-auto mb-4"></div>
+            <div class="text-right text-xl font-bold mb-6">
+                Total: <span id="cart-total">$0.00</span>
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button id="close-cart-modal" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cerrar</button>
+                <button id="checkout-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación de Pedido -->
+    <div id="order-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-md">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <i class="fas fa-check text-green-600 text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold my-4">¡Pedido Realizado con Éxito!</h2>
+            <p class="text-gray-600">Tu número de pedido es:</p>
+            <p id="order-number" class="text-3xl font-mono bg-gray-200 my-4 p-2 rounded-md"></p>
+            <div id="order-summary" class="text-left my-4 border-t border-b py-4"></div>
+            <p class="text-gray-600 mb-6">Guárdalo para hacer seguimiento. El estado inicial es "Pendiente de Pago".</p>
+            <button id="close-confirmation-modal" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDuRkOZ6cSt1ScnqYbn9EnQeYXUCofDYHc",
+          authDomain: "mitienda-afb9a.firebaseapp.com",
+          projectId: "mitienda-afb9a",
+          storageBucket: "mitienda-afb9a.appspot.com",
+          messagingSenderId: "551425772249",
+          appId: "1:551425772249:web:07c39fb3a1045e10348cc8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const productCollection = collection(db, 'products');
+        const orderCollection = collection(db, 'orders');
+
+        let cart = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+             fetchProducts();
+        });
+
+        function fetchProducts() {
+            onSnapshot(productCollection, (snapshot) => {
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '';
+                if(snapshot.empty) {
+                     productList.innerHTML = `<p class="col-span-full text-center text-gray-500">No hay productos disponibles por el momento.</p>`;
+                }
+                snapshot.docs.forEach(doc => {
+                    const product = { id: doc.id, ...doc.data() };
+                    productList.innerHTML += `
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                            <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Imagen no disponible';">
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold truncate">${product.name}</h3>
+                                <p class="text-gray-600 text-sm mt-1 h-10 overflow-hidden">${product.description}</p>
+                                <div class="flex justify-between items-center mt-4">
+                                    <span class="text-xl font-bold text-indigo-600">$${product.price.toFixed(2)}</span>
+                                    <button data-id="${product.id}" class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+        
+        document.addEventListener('click', e => {
+            if (e.target.closest('.add-to-cart-btn')) {
+                const productId = e.target.closest('.add-to-cart-btn').dataset.id;
+                addToCart(productId);
+            }
+        });
+
+        async function addToCart(productId) {
+            const productRef = doc(db, 'products', productId);
+            const productSnap = await getDoc(productRef);
+            if (productSnap.exists()) {
+                if (cart[productId]) {
+                    cart[productId].quantity++;
+                } else {
+                    cart[productId] = { ...productSnap.data(), quantity: 1, id: productId };
+                }
+                updateCartUI();
+            }
+        }
+        
+        function updateCartUI() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const cartCount = document.getElementById('cart-count');
+            let total = 0;
+            let count = 0;
+            cartItems.innerHTML = '';
+
+            if (Object.keys(cart).length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-500">Tu carrito está vacío.</p>';
+                document.getElementById('checkout-btn').disabled = true;
+                document.getElementById('checkout-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                document.getElementById('checkout-btn').disabled = false;
+                document.getElementById('checkout-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            for (const id in cart) {
+                const item = cart[id];
+                total += item.price * item.quantity;
+                count += item.quantity;
+                cartItems.innerHTML += `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">${item.name}</p>
+                            <p class="text-sm text-gray-500">$${item.price.toFixed(2)} x ${item.quantity}</p>
+                        </div>
+                        <div>
+                            <button class="remove-from-cart-btn text-red-500 hover:text-red-700" data-id="${id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+            cartCount.textContent = count;
+        }
+
+        document.getElementById('cart-button').addEventListener('click', () => {
+            document.getElementById('cart-modal').classList.remove('hidden');
+            updateCartUI();
+        });
+        document.getElementById('close-cart-modal').addEventListener('click', () => {
+            document.getElementById('cart-modal').classList.add('hidden');
+        });
+        
+        document.getElementById('cart-items').addEventListener('click', e => {
+            if (e.target.closest('.remove-from-cart-btn')) {
+                const id = e.target.closest('.remove-from-cart-btn').dataset.id;
+                delete cart[id];
+                updateCartUI();
+            }
+        });
+        
+        document.getElementById('checkout-btn').addEventListener('click', async () => {
+            if (Object.keys(cart).length === 0) return;
+            const orderItems = Object.values(cart).map(item => ({
+                productId: item.id, productName: item.name, price: item.price, quantity: item.quantity
+            }));
+            const total = Object.values(cart).reduce((sum, item) => sum + item.price * item.quantity, 0);
+            
+            try {
+                const orderNumber = Date.now().toString();
+                await addDoc(orderCollection, {
+                    orderNumber: orderNumber, items: orderItems, total: total, status: 'Pendiente de Pago', createdAt: serverTimestamp()
+                });
+                document.getElementById('cart-modal').classList.add('hidden');
+                document.getElementById('order-number').textContent = orderNumber;
+                const summaryEl = document.getElementById('order-summary');
+                summaryEl.innerHTML = orderItems.map(item => `<p>${item.quantity} x ${item.productName} - $${(item.price * item.quantity).toFixed(2)}</p>`).join('');
+                summaryEl.innerHTML += `<p class="font-bold mt-2">Total: $${total.toFixed(2)}</p>`;
+                document.getElementById('order-confirmation-modal').classList.remove('hidden');
+                cart = {};
+                updateCartUI();
+            } catch (error) {
+                console.error("Error al crear el pedido: ", error);
+                alert('Hubo un error al procesar tu pedido.');
+            }
+        });
+        
+        document.getElementById('close-confirmation-modal').addEventListener('click', () => {
+            document.getElementById('order-confirmation-modal').classList.add('hidden');
+        });
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Pendiente de Pago': return 'bg-red-200 text-red-800';
+                case 'Pendiente de Entrega': return 'bg-yellow-200 text-yellow-800';
+                case 'Entregado': return 'bg-green-200 text-green-800';
+                default: return 'bg-gray-200 text-gray-800';
+            }
+        }
+        
+        document.getElementById('track-order-btn').addEventListener('click', async () => {
+            const orderNumber = document.getElementById('track-order-input').value.trim();
+            const resultDiv = document.getElementById('order-status-result');
+            if (!orderNumber) {
+                resultDiv.innerHTML = `<p class="text-red-500">Por favor, ingresa un número de pedido.</p>`;
+                return;
+            }
+            const q = query(orderCollection, where("orderNumber", "==", orderNumber));
+            const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                resultDiv.innerHTML = `<p class="text-red-500">No se encontró ningún pedido con ese número.</p>`;
+            } else {
+                const order = querySnapshot.docs[0].data();
+                resultDiv.innerHTML = `
+                    <div class="p-4 rounded-md border ${getStatusColor(order.status).replace('bg-', 'border-').replace('-200', '-400')} ${getStatusColor(order.status)}">
+                        <p><strong>Estado del pedido ${order.orderNumber}:</strong> 
+                           <span class="font-bold">${order.status}</span>
+                        </p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
+
