@@ -56,7 +56,7 @@
     
     <footer id="summary-bar" class="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] flex justify-between items-center hidden z-50 transition-transform transform translate-y-full">
         <div class="text-lg">
-            Total: <span id="total-price" class="font-bold text-2xl text-indigo-600">$0.00</span>
+            Total: <span id="total-price" class="font-bold text-2xl text-indigo-600">$0</span>
         </div>
         <button id="finalize-order-btn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-bold transition-all duration-300 shadow-lg hover:shadow-xl">
             <i class="fas fa-check-circle mr-2"></i>Finalizar Pedido
@@ -82,7 +82,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, serverTimestamp, query, where, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyDuRkOZ6cSt1ScnqYbn9EnQeYXUCofDYHc",
           authDomain: "mitienda-afb9a.firebaseapp.com",
@@ -101,6 +100,14 @@
         let cart = {};
         let productsCache = {};
 
+        function formatPrice(number) {
+            if (typeof number !== 'number') {
+                number = Number(number) || 0;
+            }
+            const roundedNumber = Math.round(number);
+            return roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             fetchProducts();
             displayUserOrders();
@@ -110,7 +117,6 @@
             const orders = JSON.parse(localStorage.getItem('myOrders')) || [];
             const container = document.getElementById('user-orders-section');
             const listEl = document.getElementById('user-orders-list');
-
             if (orders.length > 0) {
                 listEl.innerHTML = orders.map(orderNum => `<span class="bg-indigo-200 px-2 py-1 rounded-md text-sm">${orderNum}</span>`).join('');
                 container.classList.remove('hidden');
@@ -128,7 +134,7 @@
                 }
                 snapshot.docs.forEach(doc => {
                     const product = { id: doc.id, ...doc.data() };
-                    productsCache[product.id] = product; // Cache product data
+                    productsCache[product.id] = product;
                     productList.innerHTML += `
                         <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-all duration-300" data-product-id="${product.id}">
                             <img src="${product.imageUrl || 'https://placehold.co/600x400/e2e8f0/64748b?text=Imagen'}" alt="${product.name}" class="w-full h-48 object-cover">
@@ -136,7 +142,7 @@
                                 <h3 class="text-lg font-semibold truncate">${product.name}</h3>
                                 <p class="text-gray-600 text-sm mt-1 h-10 overflow-hidden">${product.description || ''}</p>
                                 <div class="flex justify-between items-center mt-auto pt-4">
-                                    <span class="text-xl font-bold text-indigo-600">$${(product.price || 0).toFixed(2)}</span>
+                                    <span class="text-xl font-bold text-indigo-600">$${formatPrice(product.price || 0)}</span>
                                     <button data-id="${product.id}" class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300">Agregar</button>
                                     <div class="quantity-controls hidden items-center bg-gray-200 rounded-full" data-controls-for="${product.id}">
                                         <button class="decrease-quantity text-lg font-bold px-3 py-1" data-id="${product.id}">-</button>
@@ -162,33 +168,25 @@
             } else if (target.closest('.decrease-quantity')) {
                 const productId = target.closest('.decrease-quantity').dataset.id;
                 cart[productId]--;
-                if (cart[productId] <= 0) {
-                    delete cart[productId];
-                }
+                if (cart[productId] <= 0) { delete cart[productId]; }
             }
             updateUI();
         });
 
         function updateUI() {
             let total = 0;
-            const productCards = document.querySelectorAll('.product-card');
-
-            productCards.forEach(card => {
+            document.querySelectorAll('.product-card').forEach(card => {
                 const productId = card.dataset.productId;
                 const quantity = cart[productId];
-                
                 const addBtn = card.querySelector('.add-to-cart-btn');
                 const controls = card.querySelector('.quantity-controls');
-                
                 if (quantity > 0) {
                     card.classList.add('ring-2', 'ring-indigo-500');
                     addBtn.classList.add('hidden');
                     controls.classList.remove('hidden');
                     controls.classList.add('flex');
                     card.querySelector('.quantity-display').textContent = quantity;
-                    if(productsCache[productId]) {
-                        total += productsCache[productId].price * quantity;
-                    }
+                    if(productsCache[productId]) { total += productsCache[productId].price * quantity; }
                 } else {
                     card.classList.remove('ring-2', 'ring-indigo-500');
                     addBtn.classList.remove('hidden');
@@ -196,10 +194,9 @@
                     controls.classList.remove('flex');
                 }
             });
-            
             const summaryBar = document.getElementById('summary-bar');
             if (total > 0) {
-                document.getElementById('total-price').textContent = `$${total.toFixed(2)}`;
+                document.getElementById('total-price').textContent = `$${formatPrice(total)}`;
                 summaryBar.classList.remove('hidden', 'translate-y-full');
             } else {
                  summaryBar.classList.add('translate-y-full');
@@ -221,47 +218,32 @@
                     return newNumber;
                 });
                 return newOrderNumber.toString();
-            } catch (e) {
-                console.error("Transaction for order number failed: ", e);
-                return Date.now().toString(); // Fallback
-            }
+            } catch (e) { console.error("Transaction failed: ", e); return Date.now().toString(); }
         }
         
         document.getElementById('finalize-order-btn').addEventListener('click', async () => {
             if (Object.keys(cart).length === 0) return;
-            
             const orderItems = Object.entries(cart).map(([id, quantity]) => ({
-                productId: id,
-                productName: productsCache[id].name,
-                price: productsCache[id].price,
-                quantity: quantity
+                productId: id, productName: productsCache[id].name, price: productsCache[id].price, quantity: quantity
             }));
             const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            
             try {
                 const orderNumber = await getNextOrderNumber();
                 await addDoc(orderCollection, {
                     orderNumber: orderNumber, items: orderItems, total: total, status: 'Pendiente de Pago', createdAt: serverTimestamp()
                 });
-
-                // Save order to localStorage and update UI
                 const myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
                 myOrders.push(orderNumber);
                 localStorage.setItem('myOrders', JSON.stringify(myOrders));
                 displayUserOrders();
-
                 document.getElementById('order-number').textContent = orderNumber;
                 const summaryEl = document.getElementById('order-summary-modal');
-                summaryEl.innerHTML = orderItems.map(item => `<p>${item.quantity} x ${item.productName} - $${(item.price * item.quantity).toFixed(2)}</p>`).join('');
-                summaryEl.innerHTML += `<p class="font-bold mt-2">Total: $${total.toFixed(2)}</p>`;
+                summaryEl.innerHTML = orderItems.map(item => `<p>${item.quantity} x ${item.productName} - $${formatPrice(item.price * item.quantity)}</p>`).join('');
+                summaryEl.innerHTML += `<p class="font-bold mt-2">Total: $${formatPrice(total)}</p>`;
                 document.getElementById('order-confirmation-modal').classList.remove('hidden');
-                
                 cart = {};
                 updateUI();
-            } catch (error) {
-                console.error("Error creating order: ", error);
-                alert('Hubo un error al procesar tu pedido.');
-            }
+            } catch (error) { console.error("Error creating order: ", error); alert('Hubo un error al procesar tu pedido.'); }
         });
         
         document.getElementById('close-confirmation-modal').addEventListener('click', () => {
