@@ -26,7 +26,7 @@
     <header class="bg-white shadow-lg sticky top-0 z-40">
         <nav class="container mx-auto px-4 lg:px-6 py-2">
             <div class="flex items-center justify-center">
-                <img src="https://firebasestorage.googleapis.com/v0/b/mitienda-afb9a.appspot.com/o/WhatsApp%20Image%202025-08-26%20at%2010.30.35.jpeg?alt=media" alt="Logo de Por Su Pollo" class="h-16 w-auto">
+                <img src="https://drive.google.com/uc?export=view&id=14MZrb8xTtJFd285xl3aGlagy3qEnpq3M" alt="Logo de Por Su Pollo" class="h-16 w-auto">
             </div>
         </nav>
     </header>
@@ -58,8 +58,9 @@
         <div class="text-lg">
             <span class="font-brand text-2xl">Total:</span> <span id="total-price" class="font-bold text-2xl text-orange-600">$0</span>
         </div>
-        <button id="finalize-order-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 font-brand text-xl transition-all duration-300 shadow-lg hover:shadow-xl">
-            ¡Confirmar mi Pollo! 👍
+        <button id="finalize-order-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 font-brand text-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-75 disabled:cursor-not-allowed">
+            <span class="btn-text">¡Confirmar mi Pollo! 👍</span>
+            <span class="btn-spinner hidden"><i class="fas fa-spinner fa-spin"></i> Procesando...</span>
         </button>
     </footer>
 
@@ -70,9 +71,14 @@
             </div>
             <h2 class="text-3xl font-brand my-4 text-amber-800">¡Tu pedido está en el horno! 🔥</h2>
             <p class="text-gray-600">Tu número para retirar es:</p>
-            <p id="order-number" class="text-4xl font-mono bg-amber-200 text-amber-900 my-4 p-3 rounded-md inline-block"></p>
+            <p id="order-number" class="text-5xl font-mono bg-amber-200 text-amber-900 my-4 p-3 rounded-md inline-block"></p>
             <div id="order-summary-modal" class="text-left my-4 border-t border-b border-orange-200 py-4"></div>
-            <p class="text-gray-600 mb-6">Por favor, realiza el pago para confirmar tu pedido. ¡Una vez recibido, lo prepararemos para la entrega! 🍗</p>
+
+            <div class="bg-red-500 text-white font-brand text-3xl p-4 rounded-lg my-6 animate-bounce">
+                <i class="fas fa-exclamation-triangle mr-2"></i>¡AHORA DEBES PAGAR!
+            </div>
+            <p class="text-gray-600 mb-6">Muestra este número al pagar para que empecemos a preparar tu delicia. 🍗</p>
+
             <button id="close-confirmation-modal" class="bg-orange-500 text-white px-8 py-3 rounded-md hover:bg-orange-600 font-brand text-lg">¡Entendido! 😎</button>
         </div>
     </div>
@@ -80,14 +86,14 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, serverTimestamp, query, where, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, serverTimestamp, query, where, getDocs, runTransaction, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDuRkOZ6cSt1ScnqYbn9EnQeYXUCofDYHc",
-  authDomain: "mitienda-afb9a.firebaseapp.com",
-  projectId: "mitienda-afb9a",
-  storageBucket: "mitienda-afb9a.firebasestorage.app",
-  messagingSenderId: "551425772249"
+          authDomain: "mitienda-afb9a.firebaseapp.com",
+          projectId: "mitienda-afb9a",
+          storageBucket: "mitienda-afb9a.firebasestorage.app",
+          messagingSenderId: "551425772249"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -129,7 +135,8 @@
         }
 
         function fetchProducts() {
-            onSnapshot(productCollection, (snapshot) => {
+            const q = query(productCollection, orderBy('name'));
+            onSnapshot(q, (snapshot) => {
                 const productList = document.getElementById('product-list');
                 productList.innerHTML = '';
                 if(snapshot.empty) {
@@ -224,30 +231,51 @@
             } catch (e) { console.error("Transaction failed: ", e); return Date.now().toString(); }
         }
         
-        document.getElementById('finalize-order-btn').addEventListener('click', async () => {
+        const finalizeBtn = document.getElementById('finalize-order-btn');
+        const btnText = finalizeBtn.querySelector('.btn-text');
+        const btnSpinner = finalizeBtn.querySelector('.btn-spinner');
+
+        finalizeBtn.addEventListener('click', async () => {
             if (Object.keys(cart).length === 0) return;
+
+            finalizeBtn.disabled = true;
+            btnText.classList.add('hidden');
+            btnSpinner.classList.remove('hidden');
+
             const orderItems = Object.entries(cart).map(([id, quantity]) => ({
                 productId: id, productName: productsCache[id].name, price: productsCache[id].price, quantity: quantity
             }));
             const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
             try {
                 const orderNumber = await getNextOrderNumber();
                 await addDoc(orderCollection, {
                     orderNumber: orderNumber, items: orderItems, total: total, status: 'Pendiente de Pago', createdAt: serverTimestamp()
                 });
+
                 const myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
                 myOrders.push(orderNumber);
                 localStorage.setItem('myOrders', JSON.stringify(myOrders));
                 displayUserOrders();
+                
                 document.getElementById('order-number').textContent = orderNumber;
                 const summaryEl = document.getElementById('order-summary-modal');
                 summaryEl.innerHTML = orderItems.map(item => `<p>${item.quantity} x ${item.productName} - $${formatPrice(item.price * item.quantity)}</p>`).join('');
                 summaryEl.innerHTML += `<p class="font-bold font-brand mt-2">Total: $${formatPrice(total)}</p>`;
+                
                 document.getElementById('order-confirmation-modal').classList.remove('hidden');
                 document.querySelector('#order-confirmation-modal > div').classList.remove('animate-pulse');
+                
                 cart = {};
                 updateUI();
-            } catch (error) { console.error("Error creating order: ", error); alert('Hubo un error al procesar tu pedido.'); }
+            } catch (error) { 
+                console.error("Error creating order: ", error); 
+                alert('Hubo un error al procesar tu pedido.'); 
+            } finally {
+                finalizeBtn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnSpinner.classList.add('hidden');
+            }
         });
         
         document.getElementById('close-confirmation-modal').addEventListener('click', () => {
