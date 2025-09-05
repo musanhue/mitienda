@@ -103,7 +103,7 @@
                 <input type="hidden" id="product-id">
                 <div class="mb-4">
                     <label for="product-name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
                 </div>
                 <div class="mb-4">
                     <label for="product-description" class="block text-sm font-medium text-gray-700">Descripción</label>
@@ -111,7 +111,7 @@
                 </div>
                 <div class="mb-4">
                     <label for="product-price" class="block text-sm font-medium text-gray-700">Precio</label>
-                    <input type="number" id="product-price" min="0" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
+                    <input type="number" id="product-price" min="0" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700">Imagen del Producto</label>
@@ -152,7 +152,7 @@
           authDomain: "mitienda-afb9a.firebaseapp.com",
           projectId: "mitienda-afb9a",
           storageBucket: "mitienda-afb9a.appspot.com",
-          messagingSenderId: "551425772249",
+          messagingSenderId: "551425772249"
         };
         
         const app = initializeApp(firebaseConfig);
@@ -256,6 +256,10 @@
             resetProductModal();
         });
         
+        document.getElementById('select-file-btn').addEventListener('click', () => {
+            document.getElementById('image-file-input').click();
+        });
+        
         async function resizeImage(file, maxWidth = 1024) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -275,10 +279,11 @@
                            } else { reject(new Error('Canvas to Blob conversion failed')); }
                         }, 'image/jpeg', 0.8);
                     };
+                    img.onerror = reject; // Handle image loading errors
                     img.src = event.target.result;
                 };
                 reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(file); // CORREGIDO: readAsDataURL en lugar de readAsModalURL
             });
         }
 
@@ -291,7 +296,10 @@
                     imagePreview.src = URL.createObjectURL(resizedFile);
                     imagePreview.classList.remove('hidden');
                     stopCamera();
-                } catch (error) { console.error("Error resizing image:", error); alert("Hubo un error al procesar la imagen."); }
+                } catch (error) { 
+                    console.error("Error resizing image:", error);
+                    alert("Hubo un error al procesar la imagen. Intenta con otra.");
+                }
             }
         });
 
@@ -300,7 +308,11 @@
             try {
                 cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
                 document.getElementById('camera-view').srcObject = cameraStream;
-            } catch (err) { console.error("Error accessing camera: ", err); alert('No se pudo acceder a la cámara.'); document.getElementById('camera-container').classList.add('hidden'); }
+            } catch (err) { 
+                console.error("Error accessing camera: ", err); 
+                alert('No se pudo acceder a la cámara. Asegúrate de dar los permisos necesarios.');
+                document.getElementById('camera-container').classList.add('hidden'); 
+            }
         });
 
         function stopCamera() {
@@ -326,7 +338,10 @@
                     imagePreview.src = URL.createObjectURL(resizedFile);
                     imagePreview.classList.remove('hidden');
                     stopCamera();
-                 } catch (error) { console.error("Error processing captured image:", error); alert("Hubo un error al procesar la imagen capturada."); }
+                 } catch (error) { 
+                    console.error("Error processing captured image:", error); 
+                    alert("Hubo un error al procesar la imagen capturada.");
+                 }
             }, 'image/jpeg');
         });
 
@@ -339,27 +354,43 @@
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             toggleSaveButton(true);
+            
             const id = document.getElementById('product-id').value;
-            let imageUrl = imagePreview.src.startsWith('http') || imagePreview.src.startsWith('blob:') ? imagePreview.src : '';
-            if (currentImageFile) {
-                try {
+            let imageUrl = document.getElementById('image-preview').src;
+            if (imageUrl.startsWith('blob:')) {
+                imageUrl = ''; 
+            }
+
+            try {
+                if (currentImageFile) {
                     const storageRef = ref(storage, `products/${Date.now()}_${currentImageFile.name}`);
                     const snapshot = await uploadBytes(storageRef, currentImageFile);
                     imageUrl = await getDownloadURL(snapshot.ref);
-                } catch(error) { console.error("Error uploading image:", error); alert("Error al subir la imagen."); toggleSaveButton(false); return; }
-            }
-            const productData = {
-                name: document.getElementById('product-name').value,
-                description: document.getElementById('product-description').value,
-                price: parseFloat(document.getElementById('product-price').value) || 0,
-                imageUrl: imageUrl
-            };
-            try {
-                if (id) { await updateDoc(doc(db, 'products', id), productData); } else { await addDoc(productCollection, productData); }
+                }
+
+                const productData = {
+                    name: document.getElementById('product-name').value,
+                    description: document.getElementById('product-description').value,
+                    price: parseFloat(document.getElementById('product-price').value) || 0,
+                    imageUrl: imageUrl
+                };
+
+                if (id) {
+                    await updateDoc(doc(db, 'products', id), productData);
+                } else {
+                    await addDoc(productCollection, productData);
+                }
+
                 productModal.classList.add('hidden');
                 resetProductModal();
-            } catch (error) { console.error("Error saving product:", error); toggleSaveButton(false); }
+            } catch (error) {
+                console.error("Error saving product:", error);
+                alert("Hubo un error al guardar el producto. Por favor, intenta de nuevo.");
+            } finally {
+                toggleSaveButton(false);
+            }
         });
+
 
         document.getElementById('admin-product-list').addEventListener('click', async (e) => {
             const editBtn = e.target.closest('.edit-product-btn');
