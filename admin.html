@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración</title>
+    <title>Por Su Pollo - Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .font-brand { font-family: 'Lilita One', cursive; }
         .view { display: none; }
         .view.active { display: block; }
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        ::-webkit-scrollbar-track { background: #fff7ed; }
+        ::-webkit-scrollbar-thumb { background: #fb923c; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f97316; }
         #camera-view {
             width: 100%;
             max-width: 400px;
@@ -23,70 +26,74 @@
             border-radius: 0.5rem;
             background-color: #000;
         }
+        .nav-link.active {
+            color: #f97316;
+            font-weight: bold;
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-orange-50 text-amber-900">
 
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-4 lg:px-6 py-4">
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-4 lg:px-6 py-2">
             <div class="flex items-center justify-between">
-                <a href="#" class="text-2xl font-bold text-indigo-600">MiNegocio - Admin</a>
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#productos" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Productos</a>
-                    <a href="#pagos" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Pagos</a>
-                    <a href="#entregas" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Entregas</a>
-                    <a href="#resumen" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Resumen General</a>
+                <a href="#" class="flex items-center space-x-3">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/mitienda-afb9a.appspot.com/o/WhatsApp%20Image%202025-08-26%20at%2010.30.35.jpeg?alt=media" alt="Logo Por Su Pollo" class="h-12 w-auto">
+                    <span class="text-2xl font-brand text-amber-800">Admin Panel</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6 font-brand text-lg">
+                    <a href="#productos" class="nav-link text-amber-700 hover:text-orange-500 transition duration-300">Productos 🍗</a>
+                    <a href="#pagos" class="nav-link text-amber-700 hover:text-orange-500 transition duration-300">Pagos 💰</a>
+                    <a href="#entregas" class="nav-link text-amber-700 hover:text-orange-500 transition duration-300">Entregas 🛵</a>
+                    <a href="#resumen" class="nav-link text-amber-700 hover:text-orange-500 transition duration-300">Resumen 📈</a>
                 </div>
-                <button id="mobile-menu-button" class="md:hidden">
-                    <i class="fas fa-bars text-xl text-gray-600"></i>
+                <button id="mobile-menu-button" class="md:hidden text-orange-500 text-2xl">
+                    <i class="fas fa-bars"></i>
                 </button>
             </div>
-            <div id="mobile-menu" class="hidden md:hidden mt-4">
-                <a href="#productos" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Productos</a>
-                <a href="#pagos" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Pagos</a>
-                <a href="#entregas" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Entregas</a>
-                <a href="#resumen" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Resumen General</a>
+            <div id="mobile-menu" class="hidden md:hidden mt-4 font-brand text-lg">
+                <a href="#productos" class="nav-link block py-2 text-amber-700 hover:text-orange-500">Productos 🍗</a>
+                <a href="#pagos" class="nav-link block py-2 text-amber-700 hover:text-orange-500">Pagos 💰</a>
+                <a href="#entregas" class="nav-link block py-2 text-amber-700 hover:text-orange-500">Entregas 🛵</a>
+                <a href="#resumen" class="nav-link block py-2 text-amber-700 hover:text-orange-500">Resumen 📈</a>
             </div>
         </nav>
     </header>
 
     <main class="container mx-auto p-4 lg:p-6">
         <section id="productos-view" class="view">
-            <h1 class="text-3xl font-bold mb-6">Administración de Productos</h1>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold">Listado de Productos</h2>
-                <button id="add-product-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300">
-                    <i class="fas fa-plus mr-2"></i>Agregar Producto
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                <h1 class="text-4xl font-brand text-amber-800">Administración de Productos</h1>
+                <button id="add-product-btn" class="w-full sm:w-auto bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 font-brand text-xl shadow-md">
+                    <i class="fas fa-plus mr-2"></i>Agregar Pollo
                 </button>
             </div>
-            <div id="admin-product-list" class="bg-white p-4 rounded-lg shadow-md space-y-4 max-h-[70vh] overflow-y-auto"></div>
+            <div id="admin-product-list" class="bg-white p-4 rounded-lg shadow-lg space-y-4 max-h-[70vh] overflow-y-auto"></div>
         </section>
 
         <section id="pagos-view" class="view">
-             <h1 class="text-3xl font-bold mb-6">Gestión de Pagos</h1>
-             <h2 class="text-2xl font-semibold mb-4">Pedidos Pendientes de Pago</h2>
-             <div id="pending-payment-list" class="bg-white p-4 rounded-lg shadow-md space-y-4 max-h-[70vh] overflow-y-auto"></div>
+             <h1 class="text-4xl font-brand text-amber-800 mb-6">Gestión de Pagos 💰</h1>
+             <h2 class="text-2xl font-brand text-amber-700 mb-4">Pedidos Pendientes de Pago</h2>
+             <div id="pending-payment-list" class="bg-white p-4 rounded-lg shadow-lg space-y-4 max-h-[70vh] overflow-y-auto"></div>
         </section>
 
         <section id="entregas-view" class="view">
-            <h1 class="text-3xl font-bold mb-6">Gestión de Entregas</h1>
-             <h2 class="text-2xl font-semibold mb-4">Pedidos Pendientes de Entrega</h2>
-            <div id="pending-delivery-list" class="bg-white p-4 rounded-lg shadow-md space-y-4"></div>
+            <h1 class="text-4xl font-brand text-amber-800 mb-6">Gestión de Entregas 🛵</h1>
+             <h2 class="text-2xl font-brand text-amber-700 mb-4">Pedidos Pendientes de Entrega</h2>
+            <div id="pending-delivery-list" class="bg-white p-4 rounded-lg shadow-lg space-y-4"></div>
         </section>
 
         <section id="resumen-view" class="view">
-            <h1 class="text-3xl font-bold mb-6">Resumen de Todos los Pedidos</h1>
-            
+            <h1 class="text-4xl font-brand text-amber-800 mb-6">Resumen General 📈</h1>
             <div id="summary-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                 <div class="bg-gray-200 p-4 rounded-lg shadow animate-pulse h-24"></div>
-                 <div class="bg-gray-200 p-4 rounded-lg shadow animate-pulse h-24"></div>
-                 <div class="bg-gray-200 p-4 rounded-lg shadow animate-pulse h-24"></div>
+                 <div class="bg-gray-200 p-4 rounded-lg shadow animate-pulse h-28"></div>
+                 <div class="bg-gray-200 p-4 rounded-lg shadow animate-pulse h-28"></div>
+                 <div class="bg-gray-200 p-4 rounded-lg shadow animate-pulse h-28"></div>
             </div>
-
-            <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+            <div class="bg-white p-4 rounded-lg shadow-lg overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-gray-200">
+                    <thead class="font-brand">
+                        <tr class="bg-orange-100">
                             <th class="p-3">N° Pedido</th> <th class="p-3">Fecha</th> <th class="p-3">Total</th> <th class="p-3">Estado</th> <th class="p-3">Detalle</th>
                         </tr>
                     </thead>
@@ -96,43 +103,43 @@
         </section>
     </main>
 
-    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-full overflow-y-auto">
-            <h2 id="modal-title" class="text-2xl font-bold mb-6">Agregar Producto</h2>
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-[60] p-4">
+        <div class="bg-orange-50 p-6 rounded-lg shadow-xl w-full max-w-md max-h-full overflow-y-auto">
+            <h2 id="modal-title" class="text-3xl font-brand mb-6 text-amber-800">Agregar Producto</h2>
             <form id="product-form">
                 <input type="hidden" id="product-id">
                 <div class="mb-4">
-                    <label for="product-name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    <label for="product-name" class="block text-sm font-medium text-amber-800">Nombre del Plato 🍗</label>
+                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border-orange-200 border rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500" required>
                 </div>
                 <div class="mb-4">
-                    <label for="product-description" class="block text-sm font-medium text-gray-700">Descripción</label>
-                    <textarea id="product-description" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                    <label for="product-description" class="block text-sm font-medium text-amber-800">Descripción 📝</label>
+                    <textarea id="product-description" rows="3" class="mt-1 block w-full p-2 border-orange-200 border rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="product-price" class="block text-sm font-medium text-gray-700">Precio</label>
-                    <input type="number" id="product-price" min="0" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    <label for="product-price" class="block text-sm font-medium text-amber-800">Precio 💲</label>
+                    <input type="number" id="product-price" min="0" class="mt-1 block w-full p-2 border-orange-200 border rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500" required>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700">Imagen del Producto</label>
-                    <img id="image-preview" class="mt-2 w-full rounded-md object-cover h-48 hidden bg-gray-100">
+                    <label class="block text-sm font-medium text-amber-800">Foto del Plato 📸</label>
+                    <img id="image-preview" class="mt-2 w-full rounded-md object-cover h-48 hidden bg-orange-100 border-2 border-dashed border-orange-300">
                     <input type="file" id="image-file-input" class="hidden" accept="image/*">
                     <div class="flex space-x-2 mt-2">
-                        <button type="button" id="select-file-btn" class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 text-sm"><i class="fas fa-upload mr-2"></i>Examinar</button>
-                        <button type="button" id="use-camera-btn" class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 text-sm"><i class="fas fa-camera mr-2"></i>Cámara</button>
+                        <button type="button" id="select-file-btn" class="w-full bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 font-semibold"><i class="fas fa-upload mr-2"></i>Examinar</button>
+                        <button type="button" id="use-camera-btn" class="w-full bg-orange-200 text-orange-800 px-4 py-2 rounded-md hover:bg-orange-300 font-semibold"><i class="fas fa-camera mr-2"></i>Cámara</button>
                     </div>
                 </div>
                 <div id="camera-container" class="hidden mb-4">
                     <video id="camera-view" autoplay playsinline></video>
                     <canvas id="camera-canvas" class="hidden"></canvas>
                     <div class="flex space-x-2 mt-2">
-                         <button type="button" id="capture-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"><i class="fas fa-camera-retro mr-2"></i>Capturar</button>
-                         <button type="button" id="cancel-camera-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"><i class="fas fa-times mr-2"></i>Cancelar</button>
+                         <button type="button" id="capture-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 font-semibold"><i class="fas fa-camera-retro mr-2"></i>Capturar</button>
+                         <button type="button" id="cancel-camera-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 font-semibold"><i class="fas fa-times mr-2"></i>Cancelar</button>
                     </div>
                 </div>
                 <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancel-product-modal" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700" id="save-product-btn">
+                    <button type="button" id="cancel-product-modal" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 font-semibold">Cancelar</button>
+                    <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 font-brand text-lg" id="save-product-btn">
                         <span id="save-spinner" class="hidden"><i class="fas fa-spinner fa-spin"></i></span>
                         <span id="save-text">Guardar</span>
                     </button>
@@ -145,14 +152,14 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDuRkOZ6cSt1ScnqYbn9EnQeYXUCofDYHc",
-          authDomain: "mitienda-afb9a.firebaseapp.com",
-          projectId: "mitienda-afb9a",
-          storageBucket: "mitienda-afb9a.appspot.com",
-          messagingSenderId: "551425772249"
+  authDomain: "mitienda-afb9a.firebaseapp.com",
+  projectId: "mitienda-afb9a",
+  storageBucket: "mitienda-afb9a.firebasestorage.app",
+  messagingSenderId: "551425772249"
         };
         
         const app = initializeApp(firebaseConfig);
@@ -168,16 +175,17 @@
         let cameraStream = null;
 
         function formatPrice(number) {
-            if (typeof number !== 'number') {
-                number = Number(number) || 0;
-            }
-            const roundedNumber = Math.round(number);
-            return roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            if (typeof number !== 'number') number = Number(number) || 0;
+            return Math.round(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
         function showView(hash) {
             const id = (hash || '#productos').substring(1) + '-view';
             views.forEach(view => view.classList.toggle('active', view.id === id));
+            navLinks.forEach(link => {
+                const linkHash = new URL(link.href).hash;
+                link.classList.toggle('active', linkHash === (hash || '#productos'));
+            })
         }
 
         navLinks.forEach(link => {
@@ -207,22 +215,22 @@
                 const adminProductList = document.getElementById('admin-product-list');
                 adminProductList.innerHTML = '';
                  if(snapshot.empty) {
-                     adminProductList.innerHTML = `<p class="text-center text-gray-500">No has agregado ningún producto.</p>`;
+                     adminProductList.innerHTML = `<p class="text-center text-amber-700 font-brand text-2xl py-10">🍗 ¡Aún no hay pollos en el menú! 🍗</p>`;
                 }
                 snapshot.docs.forEach(doc => {
                     const product = { id: doc.id, ...doc.data() };
                     adminProductList.innerHTML += `
-                        <div class="flex items-center justify-between p-3 border-b">
+                        <div class="flex items-center justify-between p-3 border-b border-orange-100">
                             <div class="flex items-center min-w-0">
-                                <img src="${product.imageUrl || 'https://placehold.co/100/e2e8f0/64748b?text=Img'}" class="w-12 h-12 object-cover rounded-md mr-4" onerror="this.onerror=null;this.src='https://placehold.co/100/e2e8f0/64748b?text=Img';">
+                                <img src="${product.imageUrl || 'https://placehold.co/100/fed7aa/f97316?text=🍗'}" class="w-16 h-16 object-cover rounded-md mr-4" onerror="this.onerror=null;this.src='https://placehold.co/100/fed7aa/f97316?text=🍗';">
                                 <div class="truncate">
-                                    <p class="font-semibold truncate">${product.name}</p>
-                                    <p class="text-sm text-gray-500">$${formatPrice(product.price || 0)}</p>
+                                    <p class="font-semibold truncate text-amber-800">${product.name}</p>
+                                    <p class="text-sm text-orange-600 font-bold">$${formatPrice(product.price || 0)}</p>
                                 </div>
                             </div>
-                            <div class="space-x-2 flex-shrink-0">
-                                <button class="edit-product-btn text-blue-500 hover:text-blue-700" data-id="${product.id}"><i class="fas fa-edit"></i></button>
-                                <button class="delete-product-btn text-red-500 hover:text-red-700" data-id="${product.id}"><i class="fas fa-trash"></i></button>
+                            <div class="space-x-3 flex-shrink-0">
+                                <button class="edit-product-btn text-blue-500 hover:text-blue-700 text-xl" data-id="${product.id}"><i class="fas fa-edit"></i></button>
+                                <button class="delete-product-btn text-red-500 hover:text-red-700 text-xl" data-id="${product.id}"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -251,39 +259,29 @@
             productModal.classList.remove('hidden');
         });
 
-        document.getElementById('cancel-product-modal').addEventListener('click', () => {
-            productModal.classList.add('hidden');
-            resetProductModal();
-        });
+        document.getElementById('cancel-product-modal').addEventListener('click', () => productModal.classList.add('hidden'));
+        document.getElementById('select-file-btn').addEventListener('click', () => document.getElementById('image-file-input').click());
         
-        document.getElementById('select-file-btn').addEventListener('click', () => {
-            document.getElementById('image-file-input').click();
-        });
-        
-        async function resizeImage(file, maxWidth = 1024) {
+        async function processImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
+                        const maxWidth = 1024;
                         const scaleFactor = maxWidth / img.width;
                         canvas.width = maxWidth;
                         canvas.height = img.height * scaleFactor;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        canvas.toBlob((blob) => {
-                           if (blob) {
-                               const resizedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
-                               resolve(resizedFile);
-                           } else { reject(new Error('Canvas to Blob conversion failed')); }
-                        }, 'image/jpeg', 0.8);
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
-                    img.onerror = reject; // Handle image loading errors
+                    img.onerror = (err) => reject(new Error("Error loading image: " + err));
                     img.src = event.target.result;
                 };
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file); // CORREGIDO: readAsDataURL en lugar de readAsModalURL
+                reader.onerror = (err) => reject(new Error("Error reading file: " + err));
+                reader.readAsDataURL(file);
             });
         }
 
@@ -291,13 +289,13 @@
             const file = event.target.files[0];
             if (file) {
                 try {
-                    const resizedFile = await resizeImage(file);
-                    currentImageFile = resizedFile;
-                    imagePreview.src = URL.createObjectURL(resizedFile);
+                    const dataUrl = await processImage(file);
+                    currentImageFile = dataUrl;
+                    imagePreview.src = dataUrl;
                     imagePreview.classList.remove('hidden');
                     stopCamera();
                 } catch (error) { 
-                    console.error("Error resizing image:", error);
+                    console.error("Error processing image:", error);
                     alert("Hubo un error al procesar la imagen. Intenta con otra.");
                 }
             }
@@ -326,23 +324,15 @@
 
         document.getElementById('capture-btn').addEventListener('click', async () => {
             const video = document.getElementById('camera-view');
-            const canvas = document.getElementById('camera-canvas');
+            const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob(async (blob) => {
-                 try {
-                    const capturedFile = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
-                    const resizedFile = await resizeImage(capturedFile);
-                    currentImageFile = resizedFile;
-                    imagePreview.src = URL.createObjectURL(resizedFile);
-                    imagePreview.classList.remove('hidden');
-                    stopCamera();
-                 } catch (error) { 
-                    console.error("Error processing captured image:", error); 
-                    alert("Hubo un error al procesar la imagen capturada.");
-                 }
-            }, 'image/jpeg');
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            currentImageFile = dataUrl;
+            imagePreview.src = dataUrl;
+            imagePreview.classList.remove('hidden');
+            stopCamera();
         });
 
         function toggleSaveButton(isLoading) {
@@ -355,42 +345,56 @@
             e.preventDefault();
             toggleSaveButton(true);
             
-            const id = document.getElementById('product-id').value;
             let imageUrl = document.getElementById('image-preview').src;
-            if (imageUrl.startsWith('blob:')) {
-                imageUrl = ''; 
+             if (imageUrl.startsWith('blob:') || imageUrl.startsWith('data:image')) {
+                 imageUrl = '';
+            }
+            
+            if (currentImageFile) {
+                try {
+                    const storageRef = ref(storage, `products/${Date.now()}.jpg`);
+                    const snapshot = await uploadString(storageRef, currentImageFile, 'data_url');
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                } catch (storageError) {
+                    console.error("Firebase Storage error:", storageError);
+                    alert(`ERROR DE PERMISOS: No se pudo subir la imagen. Por favor, revisa que las reglas de seguridad de Firebase Storage estén correctas (allow read, write;). Error: ${storageError.code}`);
+                    toggleSaveButton(false);
+                    return;
+                }
+            }
+
+            const productId = document.getElementById('product-id').value;
+            const productData = {
+                name: document.getElementById('product-name').value,
+                description: document.getElementById('product-description').value,
+                price: parseFloat(document.getElementById('product-price').value) || 0,
+            };
+
+            if (imageUrl) {
+                productData.imageUrl = imageUrl;
+            } else if (productId) { 
+                const docRef = doc(db, 'products', productId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().imageUrl) {
+                    productData.imageUrl = docSnap.data().imageUrl;
+                }
             }
 
             try {
-                if (currentImageFile) {
-                    const storageRef = ref(storage, `products/${Date.now()}_${currentImageFile.name}`);
-                    const snapshot = await uploadBytes(storageRef, currentImageFile);
-                    imageUrl = await getDownloadURL(snapshot.ref);
-                }
-
-                const productData = {
-                    name: document.getElementById('product-name').value,
-                    description: document.getElementById('product-description').value,
-                    price: parseFloat(document.getElementById('product-price').value) || 0,
-                    imageUrl: imageUrl
-                };
-
-                if (id) {
-                    await updateDoc(doc(db, 'products', id), productData);
+                if (productId) {
+                    await updateDoc(doc(db, 'products', productId), productData);
                 } else {
                     await addDoc(productCollection, productData);
                 }
-
                 productModal.classList.add('hidden');
                 resetProductModal();
             } catch (error) {
-                console.error("Error saving product:", error);
-                alert("Hubo un error al guardar el producto. Por favor, intenta de nuevo.");
+                console.error("Error saving product to Firestore:", error);
+                alert("Hubo un error al guardar los datos del producto.");
             } finally {
                 toggleSaveButton(false);
             }
         });
-
 
         document.getElementById('admin-product-list').addEventListener('click', async (e) => {
             const editBtn = e.target.closest('.edit-product-btn');
@@ -415,7 +419,7 @@
             }
             if (deleteBtn) {
                 const id = deleteBtn.dataset.id;
-                if (confirm('¿Seguro que quieres eliminar este producto?')) {
+                if (confirm('¿Seguro que quieres eliminar este producto? 🐔')) {
                     await deleteDoc(doc(db, 'products', id));
                 }
             }
@@ -442,80 +446,82 @@
 
                 snapshot.docs.forEach(doc => {
                     const order = { id: doc.id, ...doc.data() };
-                    const orderDate = order.createdAt?.toDate().toLocaleString() || 'N/A';
+                    const orderDate = order.createdAt?.toDate().toLocaleString('es-CL') || 'N/A';
                     
                     if (summary[order.status]) {
                         summary[order.status].count++;
                         summary[order.status].total += order.total;
                     }
 
-                    const orderCardHtml = (statusAction, btnText, btnColor) => `
-                        <div class="bg-gray-50 p-4 rounded-md border">
+                    const orderCardHtml = (statusAction, btnText, btnColor, btnIcon) => `
+                        <div class="bg-orange-50 p-4 rounded-md border border-orange-200">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="font-bold">Pedido: ${order.orderNumber}</p>
+                                    <p class="font-bold font-brand text-lg">Pedido #${order.orderNumber}</p>
                                     <p class="text-sm text-gray-500">${orderDate}</p>
-                                    <p class="font-semibold text-lg my-2">$${formatPrice(order.total)}</p>
+                                    <p class="font-semibold text-xl my-2 text-orange-600">$${formatPrice(order.total)}</p>
                                 </div>
-                                <button class="${btnColor} text-white px-3 py-1 rounded-md text-sm update-status-btn" data-id="${order.id}" data-status="${statusAction}">${btnText}</button>
+                                <button class="${btnColor} text-white px-3 py-2 rounded-md text-sm font-semibold update-status-btn" data-id="${order.id}" data-status="${statusAction}">
+                                    <i class="fas ${btnIcon} mr-2"></i>${btnText}
+                                </button>
                             </div>
-                            <details class="text-sm mt-2"><summary class="cursor-pointer text-indigo-600">Ver detalle</summary><div class="mt-2 pl-4 border-l-2 border-gray-200">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details>
+                            <details class="text-sm mt-2"><summary class="cursor-pointer text-orange-600 font-semibold">Ver detalle</summary><div class="mt-2 pl-4 border-l-2 border-orange-200">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details>
                         </div>`;
 
                      allOrdersList.innerHTML += `
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-3 font-mono">${order.orderNumber}</td> <td class="p-3">${orderDate}</td> <td class="p-3 font-semibold">$${formatPrice(order.total)}</td>
-                            <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${getStatusColor(order.status)}">${order.status}</span></td>
-                            <td class="p-3"><details><summary class="cursor-pointer text-indigo-600 text-sm">Ver</summary><div class="text-xs mt-1">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details></td>
+                        <tr class="border-b border-orange-100 hover:bg-orange-50">
+                            <td class="p-3 font-mono">#${order.orderNumber}</td> <td class="p-3">${orderDate}</td> <td class="p-3 font-semibold">$${formatPrice(order.total)}</td>
+                            <td class="p-3"><span class="px-2 py-1 text-xs rounded-full font-semibold ${getStatusClass(order.status).text} ${getStatusClass(order.status).bg}">${order.status}</span></td>
+                            <td class="p-3"><details><summary class="cursor-pointer text-orange-600 text-sm font-semibold">Ver</summary><div class="text-xs mt-1">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details></td>
                         </tr>`;
 
                     if (order.status === 'Pendiente de Pago') {
                         hasPendingPayments = true;
-                        pendingPaymentList.innerHTML += orderCardHtml('Pendiente de Entrega', 'Marcar Pagado', 'bg-blue-500 hover:bg-blue-600');
+                        pendingPaymentList.innerHTML += orderCardHtml('Pendiente de Entrega', 'Marcar Pagado', 'bg-blue-500 hover:bg-blue-600', 'fa-check');
                     } else if (order.status === 'Pendiente de Entrega') {
                         hasPendingDeliveries = true;
-                        pendingDeliveryList.innerHTML += orderCardHtml('Entregado', 'Marcar Entregado', 'bg-yellow-500 hover:bg-yellow-600');
+                        pendingDeliveryList.innerHTML += orderCardHtml('Entregado', 'Marcar Entregado', 'bg-yellow-500 hover:bg-yellow-600', 'fa-truck');
                     }
                 });
 
                 const summaryCardsContainer = document.getElementById('summary-cards');
                 summaryCardsContainer.innerHTML = `
-                    <div class="bg-red-100 p-4 rounded-lg shadow">
-                        <h3 class="font-semibold text-red-800">Pendiente de Pago</h3>
-                        <p class="text-2xl font-bold text-red-900">${summary['Pendiente de Pago'].count} pedidos</p>
-                        <p class="text-lg font-semibold text-red-900">$${formatPrice(summary['Pendiente de Pago'].total)}</p>
+                    <div class="bg-red-100 p-4 rounded-lg shadow-md border-l-4 border-red-500">
+                        <h3 class="font-semibold text-red-800 font-brand text-xl">Pendiente de Pago 💰</h3>
+                        <p class="text-3xl font-bold text-red-900">${summary['Pendiente de Pago'].count} pedidos</p>
+                        <p class="text-xl font-semibold text-red-900">$${formatPrice(summary['Pendiente de Pago'].total)}</p>
                     </div>
-                    <div class="bg-yellow-100 p-4 rounded-lg shadow">
-                        <h3 class="font-semibold text-yellow-800">Pendiente de Entrega</h3>
-                        <p class="text-2xl font-bold text-yellow-900">${summary['Pendiente de Entrega'].count} pedidos</p>
-                        <p class="text-lg font-semibold text-yellow-900">$${formatPrice(summary['Pendiente de Entrega'].total)}</p>
+                    <div class="bg-yellow-100 p-4 rounded-lg shadow-md border-l-4 border-yellow-500">
+                        <h3 class="font-semibold text-yellow-800 font-brand text-xl">Pendiente de Entrega 🍳</h3>
+                        <p class="text-3xl font-bold text-yellow-900">${summary['Pendiente de Entrega'].count} pedidos</p>
+                        <p class="text-xl font-semibold text-yellow-900">$${formatPrice(summary['Pendiente de Entrega'].total)}</p>
                     </div>
-                    <div class="bg-green-100 p-4 rounded-lg shadow">
-                        <h3 class="font-semibold text-green-800">Entregado</h3>
-                        <p class="text-2xl font-bold text-green-900">${summary['Entregado'].count} pedidos</p>
-                        <p class="text-lg font-semibold text-green-900">$${formatPrice(summary['Entregado'].total)}</p>
+                    <div class="bg-green-100 p-4 rounded-lg shadow-md border-l-4 border-green-500">
+                        <h3 class="font-semibold text-green-800 font-brand text-xl">Entregado 🎉</h3>
+                        <p class="text-3xl font-bold text-green-900">${summary['Entregado'].count} pedidos</p>
+                        <p class="text-xl font-semibold text-green-900">$${formatPrice(summary['Entregado'].total)}</p>
                     </div>
                 `;
 
-                if (!hasPendingPayments) pendingPaymentList.innerHTML = '<p class="text-gray-500 text-center p-4">No hay pedidos pendientes de pago.</p>';
-                if (!hasPendingDeliveries) pendingDeliveryList.innerHTML = '<p class="text-gray-500 text-center p-4">No hay pedidos para entregar.</p>';
+                if (!hasPendingPayments) pendingPaymentList.innerHTML = '<p class="text-amber-700 text-center p-4 font-brand text-2xl">¡Todo pagado! ✅</p>';
+                if (!hasPendingDeliveries) pendingDeliveryList.innerHTML = '<p class="text-amber-700 text-center p-4 font-brand text-2xl">¡No hay pollos esperando! 🚚</p>';
             });
         }
         
         document.body.addEventListener('click', async e => {
-            if (e.target.matches('.update-status-btn')) {
-                const id = e.target.dataset.id;
-                const newStatus = e.target.dataset.status;
+            if (e.target.closest('.update-status-btn')) {
+                const id = e.target.closest('.update-status-btn').dataset.id;
+                const newStatus = e.target.closest('.update-status-btn').dataset.status;
                 await updateDoc(doc(db, 'orders', id), { status: newStatus });
             }
         });
 
-        function getStatusColor(status) {
+        function getStatusClass(status) {
             switch(status) {
-                case 'Pendiente de Pago': return 'bg-red-200 text-red-800';
-                case 'Pendiente de Entrega': return 'bg-yellow-200 text-yellow-800';
-                case 'Entregado': return 'bg-green-200 text-green-800';
-                default: return 'bg-gray-200 text-gray-800';
+                case 'Pendiente de Pago': return { bg: 'bg-red-200', text: 'text-red-800' };
+                case 'Pendiente de Entrega': return { bg: 'bg-yellow-200', text: 'text-yellow-800' };
+                case 'Entregado': return { bg: 'bg-green-200', text: 'text-green-800' };
+                default: return { bg: 'bg-gray-200', text: 'text-gray-800' };
             }
         }
     </script>
