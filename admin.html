@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .view { display: none; }
+        .view.active { display: block; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 lg:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-2xl font-bold text-indigo-600">MiNegocio - Admin</a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#productos" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Productos y Pagos</a>
+                    <a href="#entregas" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Entregas</a>
+                    <a href="#resumen" class="nav-link text-gray-600 hover:text-indigo-600 transition duration-300">Resumen General</a>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden">
+                    <i class="fas fa-bars text-xl text-gray-600"></i>
+                </button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                <a href="#productos" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Productos y Pagos</a>
+                <a href="#entregas" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Entregas</a>
+                <a href="#resumen" class="nav-link block py-2 text-gray-600 hover:text-indigo-600">Resumen General</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 lg:p-6">
+        <section id="productos-view" class="view">
+            <h1 class="text-3xl font-bold mb-6">Administración de Productos y Pagos</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold">Listado de Productos</h2>
+                        <button id="add-product-btn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300">
+                            <i class="fas fa-plus mr-2"></i>Agregar Producto
+                        </button>
+                    </div>
+                    <div id="admin-product-list" class="bg-white p-4 rounded-lg shadow-md space-y-4 max-h-[60vh] overflow-y-auto"></div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4">Pedidos Pendientes de Pago</h2>
+                    <div id="pending-payment-list" class="bg-white p-4 rounded-lg shadow-md space-y-4 max-h-[60vh] overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="entregas-view" class="view">
+            <h1 class="text-3xl font-bold mb-6">Gestión de Entregas</h1>
+             <h2 class="text-2xl font-semibold mb-4">Pedidos Pendientes de Entrega</h2>
+            <div id="pending-delivery-list" class="bg-white p-4 rounded-lg shadow-md space-y-4"></div>
+        </section>
+
+        <section id="resumen-view" class="view">
+            <h1 class="text-3xl font-bold mb-6">Resumen de Todos los Pedidos</h1>
+            <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-3">N° Pedido</th> <th class="p-3">Fecha</th> <th class="p-3">Total</th> <th class="p-3">Estado</th> <th class="p-3">Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-orders-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 overflow-y-auto p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h2 id="modal-title" class="text-2xl font-bold mb-6">Agregar Producto</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div class="mb-4">
+                    <label for="product-name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="product-description" class="block text-sm font-medium text-gray-700">Descripción</label>
+                    <textarea id="product-description" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="product-price" class="block text-sm font-medium text-gray-700">Precio</label>
+                    <input type="number" id="product-price" min="0" step="0.01" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <!-- Nuevo campo de imagen -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700">Imagen del Producto</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div class="space-y-1 text-center">
+                             <img id="image-preview" src="" class="mx-auto h-24 w-auto mb-4 hidden" alt="Vista previa">
+                             <svg id="image-icon" class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                             </svg>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="product-image-file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <span>Sube un archivo</span>
+                                    <input id="product-image-file" type="file" class="sr-only" accept="image/*">
+                                </label>
+                                <p class="pl-1">o</p>
+                                <button type="button" id="open-camera-btn" class="ml-1 relative bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">usa la cámara</button>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG hasta 1MB</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="camera-view" class="hidden my-4">
+                    <video id="camera-stream" class="w-full rounded-md" autoplay playsinline></video>
+                    <button type="button" id="capture-btn" class="mt-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">Capturar Foto</button>
+                    <canvas id="camera-canvas" class="hidden"></canvas>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-product-modal" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDuRkOZ6cSt1ScnqYbn9EnQeYXUCofDYHc",
+          authDomain: "mitienda-afb9a.firebaseapp.com",
+          projectId: "mitienda-afb9a",
+          storageBucket: "mitienda-afb9a.appspot.com",
+          messagingSenderId: "551425772249",
+          appId: "1:551425772249:web:07c39fb3a1045e10348cc8"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const productCollection = collection(db, 'products');
+        const orderCollection = collection(db, 'orders');
+
+        const views = document.querySelectorAll('.view');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function showView(hash) {
+            const id = (hash || '#productos').substring(1) + '-view';
+            views.forEach(view => view.classList.toggle('active', view.id === id));
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const hash = new URL(link.href).hash;
+                window.location.hash = hash;
+                if(document.getElementById('mobile-menu').classList.contains('hidden') === false){
+                   document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        window.addEventListener('hashchange', () => showView(window.location.hash));
+        document.addEventListener('DOMContentLoaded', () => {
+             showView(window.location.hash);
+             fetchAdminProducts();
+             listenToOrders();
+        });
+        
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        function fetchAdminProducts() {
+            onSnapshot(productCollection, (snapshot) => {
+                const adminProductList = document.getElementById('admin-product-list');
+                adminProductList.innerHTML = '';
+                 if(snapshot.empty) {
+                     adminProductList.innerHTML = `<p class="text-center text-gray-500">No has agregado ningún producto.</p>`;
+                }
+                snapshot.docs.forEach(doc => {
+                    const product = { id: doc.id, ...doc.data() };
+                    adminProductList.innerHTML += `
+                        <div class="flex items-center justify-between p-3 border-b">
+                            <div class="flex items-center min-w-0">
+                                <img src="${product.imageUrl || 'https://placehold.co/100/e2e8f0/64748b?text=Img'}" class="w-12 h-12 object-cover rounded-md mr-4 flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/100/e2e8f0/64748b?text=Img';">
+                                <div class="min-w-0">
+                                    <p class="font-semibold truncate">${product.name}</p>
+                                    <p class="text-sm text-gray-500">$${product.price.toFixed(2)}</p>
+                                </div>
+                            </div>
+                            <div class="space-x-2 flex-shrink-0">
+                                <button class="edit-product-btn text-blue-500 hover:text-blue-700" data-id="${product.id}"><i class="fas fa-edit"></i></button>
+                                <button class="delete-product-btn text-red-500 hover:text-red-700" data-id="${product.id}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+        
+        const productModal = document.getElementById('product-modal');
+        const productForm = document.getElementById('product-form');
+        const imagePreview = document.getElementById('image-preview');
+        const imageIcon = document.getElementById('image-icon');
+        const imageFileInput = document.getElementById('product-image-file');
+        const openCameraBtn = document.getElementById('open-camera-btn');
+        const cameraView = document.getElementById('camera-view');
+        const video = document.getElementById('camera-stream');
+        const canvas = document.getElementById('camera-canvas');
+        const captureBtn = document.getElementById('capture-btn');
+        let stream = null;
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            cameraView.classList.add('hidden');
+        }
+
+        openCameraBtn.addEventListener('click', async () => {
+            stopCamera();
+            cameraView.classList.remove('hidden');
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                cameraView.classList.add('hidden');
+                alert('No se pudo acceder a la cámara. Asegúrate de dar los permisos necesarios.');
+            }
+        });
+
+        captureBtn.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            imagePreview.src = dataUrl;
+            imagePreview.classList.remove('hidden');
+            imageIcon.classList.add('hidden');
+            stopCamera();
+        });
+
+        imageFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    imagePreview.src = event.target.result;
+                    imagePreview.classList.remove('hidden');
+                    imageIcon.classList.add('hidden');
+                    stopCamera();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('add-product-btn').addEventListener('click', () => {
+            productForm.reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('modal-title').textContent = 'Agregar Producto';
+            imagePreview.src = '';
+            imagePreview.classList.add('hidden');
+            imageIcon.classList.remove('hidden');
+            stopCamera();
+            productModal.classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-product-modal').addEventListener('click', () => {
+            productModal.classList.add('hidden');
+            stopCamera();
+        });
+
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('product-id').value;
+            const productData = {
+                name: document.getElementById('product-name').value,
+                description: document.getElementById('product-description').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                imageUrl: imagePreview.src
+            };
+            try {
+                if (id) { await updateDoc(doc(db, 'products', id), productData); } 
+                else { await addDoc(productCollection, productData); }
+                productModal.classList.add('hidden');
+                stopCamera();
+            } catch (error) { 
+                console.error("Error al guardar producto:", error); 
+                stopCamera();
+            }
+        });
+
+        document.getElementById('admin-product-list').addEventListener('click', async (e) => {
+            const editBtn = e.target.closest('.edit-product-btn');
+            const deleteBtn = e.target.closest('.delete-product-btn');
+            
+            if (editBtn) {
+                const id = editBtn.dataset.id;
+                const productSnap = await getDoc(doc(db, 'products', id));
+                if (productSnap.exists()) {
+                    const product = productSnap.data();
+                    document.getElementById('product-id').value = id;
+                    document.getElementById('product-name').value = product.name;
+                    document.getElementById('product-description').value = product.description;
+                    document.getElementById('product-price').value = product.price;
+                    
+                    if (product.imageUrl) {
+                        imagePreview.src = product.imageUrl;
+                        imagePreview.classList.remove('hidden');
+                        imageIcon.classList.add('hidden');
+                    } else {
+                        imagePreview.src = '';
+                        imagePreview.classList.add('hidden');
+                        imageIcon.classList.remove('hidden');
+                    }
+                    document.getElementById('modal-title').textContent = 'Editar Producto';
+                    productModal.classList.remove('hidden');
+                }
+            }
+            if (deleteBtn) {
+                const id = deleteBtn.dataset.id;
+                if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+                    await deleteDoc(doc(db, 'products', id));
+                }
+            }
+        });
+
+        function listenToOrders() {
+            const q = query(orderCollection, orderBy('createdAt', 'desc'));
+            onSnapshot(q, (snapshot) => {
+                const pendingPaymentList = document.getElementById('pending-payment-list');
+                const pendingDeliveryList = document.getElementById('pending-delivery-list');
+                const allOrdersList = document.getElementById('all-orders-list');
+                
+                pendingPaymentList.innerHTML = '';
+                pendingDeliveryList.innerHTML = '';
+                allOrdersList.innerHTML = '';
+                
+                let hasPendingPayments = false, hasPendingDeliveries = false;
+
+                snapshot.docs.forEach(doc => {
+                    const order = { id: doc.id, ...doc.data() };
+                    const orderDate = order.createdAt?.toDate().toLocaleString() || 'N/A';
+                    
+                    const orderCardHtml = (statusAction, btnText, btnColor) => `
+                        <div class="bg-gray-50 p-4 rounded-md border">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold">Pedido: ${order.orderNumber}</p>
+                                    <p class="text-sm text-gray-500">${orderDate}</p>
+                                    <p class="font-semibold text-lg my-2">$${order.total.toFixed(2)}</p>
+                                </div>
+                                <button class="${btnColor} text-white px-3 py-1 rounded-md text-sm update-status-btn" data-id="${order.id}" data-status="${statusAction}">${btnText}</button>
+                            </div>
+                            <details class="text-sm mt-2"><summary class="cursor-pointer text-indigo-600">Ver detalle</summary><div class="mt-2 pl-4 border-l-2 border-gray-200">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details>
+                        </div>`;
+
+                     allOrdersList.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3 font-mono">${order.orderNumber}</td> <td class="p-3">${orderDate}</td> <td class="p-3 font-semibold">$${order.total.toFixed(2)}</td>
+                            <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${getStatusColor(order.status)}">${order.status}</span></td>
+                            <td class="p-3"><details><summary class="cursor-pointer text-indigo-600 text-sm">Ver</summary><div class="text-xs mt-1">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details></td>
+                        </tr>`;
+
+                    if (order.status === 'Pendiente de Pago') {
+                        hasPendingPayments = true;
+                        pendingPaymentList.innerHTML += orderCardHtml('Pendiente de Entrega', 'Marcar Pagado', 'bg-blue-500 hover:bg-blue-600');
+                    } else if (order.status === 'Pendiente de Entrega') {
+                        hasPendingDeliveries = true;
+                        pendingDeliveryList.innerHTML += orderCardHtml('Entregado', 'Marcar Entregado', 'bg-yellow-500 hover:bg-yellow-600');
+                    }
+                });
+                if (!hasPendingPayments) pendingPaymentList.innerHTML = '<p class="text-gray-500 text-center p-4">No hay pedidos pendientes de pago.</p>';
+                if (!hasPendingDeliveries) pendingDeliveryList.innerHTML = '<p class="text-gray-500 text-center p-4">No hay pedidos para entregar.</p>';
+            });
+        }
+        
+        document.body.addEventListener('click', async e => {
+            if (e.target.matches('.update-status-btn')) {
+                const id = e.target.dataset.id;
+                const newStatus = e.target.dataset.status;
+                await updateDoc(doc(db, 'orders', id), { status: newStatus });
+            }
+        });
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Pendiente de Pago': return 'bg-red-200 text-red-800';
+                case 'Pendiente de Entrega': return 'bg-yellow-200 text-yellow-800';
+                case 'Entregado': return 'bg-green-200 text-green-800';
+                default: return 'bg-gray-200 text-gray-800';
+            }
+        }
+    </script>
+</body>
+</html>
+
+
