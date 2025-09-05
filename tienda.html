@@ -3,51 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda - MiNegocio</title>
+    <title>Por Su Pollo - ¡Pide ahora!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; padding-bottom: 100px; /* Space for summary bar */ }
+        body { font-family: 'Inter', sans-serif; padding-bottom: 100px; }
+        .font-brand { font-family: 'Lilita One', cursive; }
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        ::-webkit-scrollbar-track { background: #fff7ed; }
+        ::-webkit-scrollbar-thumb { background: #fb923c; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+        .product-card {
+            transition: all 0.3s ease-in-out;
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-orange-50 text-amber-900">
 
-    <header class="bg-white shadow-md sticky top-0 z-40">
-        <nav class="container mx-auto px-4 lg:px-6 py-4">
+    <header class="bg-white shadow-lg sticky top-0 z-40">
+        <nav class="container mx-auto px-4 lg:px-6 py-2">
             <div class="flex items-center justify-center">
-                <a href="#" class="text-2xl font-bold text-indigo-600">MiNegocio</a>
+                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAH0AfQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+--+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+--+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+--+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--/9j/4ttv02/T9rL9m3TdQ/48rzx5fWtxgE+W8F75bfKcHhgTg5HBp/g/wDYT/Zp8A+KtM8WeGfgd8K9D8QaLeQ6hpuq6V4V0+2u7S6hYPHLFLHGrxyIwDKykEEEEAirH7R3hLxV8PfiX4d/am+FeiX3ivW/AWl32heK/CmmxmW/17w3etDMws4gMyXdlcQx3MEY+aVHniAMm1n1/Bf7e/7NHxC8W6Z4N8P/GTwde+Itas4b7S9Hm1iCO+vYpoVmQJbs3mO2xgWQKXUggqCOadwPrCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKK-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+--+-+--+-+--+-+-+-+-+-+-+-+-+-+-+-+-+--+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+--+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+--+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+--+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--!" alt="Logo de Por Su Pollo" class="h-16 w-auto">
             </div>
         </nav>
     </header>
 
     <main class="container mx-auto p-4 lg:p-6">
         <section id="user-orders-section" class="mb-6 hidden">
-            <div class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 rounded-lg shadow-md">
-                <h3 class="font-bold">Tus números de pedido recientes:</h3>
+            <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-800 p-4 rounded-lg shadow-md">
+                <h3 class="font-bold font-brand text-lg">Tus pedidos recientes 👍 (¡Haz click para ver el estado!)</h3>
                 <div id="user-orders-list" class="flex flex-wrap gap-x-4 gap-y-2 mt-2 font-mono">
                     <!-- Order numbers will be injected here -->
                 </div>
+                <div id="recent-order-status-result" class="mt-4"></div>
             </div>
         </section>
 
         <section id="cliente-view">
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold mb-2">Nuestros Productos</h1>
-                <p class="text-gray-600">Explora nuestro catálogo y haz tu pedido.</p>
+                <h1 class="text-5xl font-brand mb-2 text-amber-800">¡El Menú de Hoy! 🔥</h1>
+                <p class="text-amber-700">Explora nuestro catálogo y pide tu pollo favorito.</p>
             </div>
-            <div class="mb-8 bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-semibold mb-4">Seguimiento de Pedido</h3>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="track-order-input" placeholder="Ingresa tu número de pedido" class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button id="track-order-btn" class="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition duration-300 font-semibold">Buscar Pedido</button>
-                </div>
-                <div id="order-status-result" class="mt-4"></div>
-            </div>
+            
             <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Los productos se cargarán aquí -->
             </div>
@@ -56,24 +56,24 @@
     
     <footer id="summary-bar" class="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] flex justify-between items-center hidden z-50 transition-transform transform translate-y-full">
         <div class="text-lg">
-            Total: <span id="total-price" class="font-bold text-2xl text-indigo-600">$0</span>
+            <span class="font-brand text-2xl">Total:</span> <span id="total-price" class="font-bold text-2xl text-orange-600">$0</span>
         </div>
-        <button id="finalize-order-btn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-bold transition-all duration-300 shadow-lg hover:shadow-xl">
-            <i class="fas fa-check-circle mr-2"></i>Finalizar Pedido
+        <button id="finalize-order-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 font-brand text-xl transition-all duration-300 shadow-lg hover:shadow-xl">
+            ¡Confirmar mi Pollo! 👍
         </button>
     </footer>
 
-    <div id="order-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-[60]">
-        <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-md">
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                <i class="fas fa-check text-green-600 text-2xl"></i>
+    <div id="order-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-[60] p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-md animate-pulse">
+             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                <span class="text-4xl">🎉</span>
             </div>
-            <h2 class="text-2xl font-bold my-4">¡Pedido Realizado con Éxito!</h2>
-            <p class="text-gray-600">Tu número de pedido es:</p>
-            <p id="order-number" class="text-3xl font-mono bg-gray-200 my-4 p-2 rounded-md"></p>
-            <div id="order-summary-modal" class="text-left my-4 border-t border-b py-4"></div>
-            <p class="text-gray-600 mb-6">Guárdalo para hacer seguimiento. El estado inicial es "Pendiente de Pago".</p>
-            <button id="close-confirmation-modal" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">Entendido</button>
+            <h2 class="text-3xl font-brand my-4 text-amber-800">¡Tu pedido está en el horno! 🔥</h2>
+            <p class="text-gray-600">Tu número para retirar es:</p>
+            <p id="order-number" class="text-4xl font-mono bg-amber-200 text-amber-900 my-4 p-3 rounded-md inline-block"></p>
+            <div id="order-summary-modal" class="text-left my-4 border-t border-b border-orange-200 py-4"></div>
+            <p class="text-gray-600 mb-6">Recuerda que tu pedido está <strong class="text-red-600">"Pendiente de Pago"</strong>.</p>
+            <button id="close-confirmation-modal" class="bg-orange-500 text-white px-8 py-3 rounded-md hover:bg-orange-600 font-brand text-lg">¡Entendido! 😎</button>
         </div>
     </div>
 
@@ -88,7 +88,6 @@
           projectId: "mitienda-afb9a",
           storageBucket: "mitienda-afb9a.appspot.com",
           messagingSenderId: "551425772249",
-          appId: "1:551425772249:web:07c39fb3a1045e10348cc8"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -118,7 +117,11 @@
             const container = document.getElementById('user-orders-section');
             const listEl = document.getElementById('user-orders-list');
             if (orders.length > 0) {
-                listEl.innerHTML = orders.map(orderNum => `<span class="bg-indigo-200 px-2 py-1 rounded-md text-sm">${orderNum}</span>`).join('');
+                listEl.innerHTML = orders.map(orderNum => `
+                    <button data-order-number="${orderNum}" class="recent-order-btn bg-orange-200 text-orange-800 px-3 py-1 rounded-full text-sm shadow hover:bg-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 transition-colors">
+                        ${orderNum}
+                    </button>
+                `).join('');
                 container.classList.remove('hidden');
             } else {
                 container.classList.add('hidden');
@@ -130,24 +133,24 @@
                 const productList = document.getElementById('product-list');
                 productList.innerHTML = '';
                 if(snapshot.empty) {
-                     productList.innerHTML = `<p class="col-span-full text-center text-gray-500">No hay productos disponibles.</p>`;
+                     productList.innerHTML = `<p class="col-span-full text-center text-amber-700 font-brand text-2xl py-10">🍗 ¡Pronto tendremos más delicias! 🍗</p>`;
                 }
                 snapshot.docs.forEach(doc => {
                     const product = { id: doc.id, ...doc.data() };
                     productsCache[product.id] = product;
                     productList.innerHTML += `
-                        <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-all duration-300" data-product-id="${product.id}">
-                            <img src="${product.imageUrl || 'https://placehold.co/600x400/e2e8f0/64748b?text=Imagen'}" alt="${product.name}" class="w-full h-48 object-cover">
+                        <div class="product-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2" data-product-id="${product.id}">
+                            <img src="${product.imageUrl || 'https://placehold.co/600x400/fed7aa/f97316?text=Delicia'}" alt="${product.name}" class="w-full h-48 object-cover">
                             <div class="p-4 flex flex-col flex-grow">
-                                <h3 class="text-lg font-semibold truncate">${product.name}</h3>
-                                <p class="text-gray-600 text-sm mt-1 h-10 overflow-hidden">${product.description || ''}</p>
+                                <h3 class="text-xl font-brand truncate text-amber-800">${product.name}</h3>
+                                <p class="text-amber-700 text-sm mt-1 h-10 overflow-hidden">${product.description || ''}</p>
                                 <div class="flex justify-between items-center mt-auto pt-4">
-                                    <span class="text-xl font-bold text-indigo-600">$${formatPrice(product.price || 0)}</span>
-                                    <button data-id="${product.id}" class="add-to-cart-btn bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300">Agregar</button>
-                                    <div class="quantity-controls hidden items-center bg-gray-200 rounded-full" data-controls-for="${product.id}">
-                                        <button class="decrease-quantity text-lg font-bold px-3 py-1" data-id="${product.id}">-</button>
-                                        <span class="quantity-display text-md font-bold px-2">1</span>
-                                        <button class="increase-quantity text-lg font-bold px-3 py-1" data-id="${product.id}">+</button>
+                                    <span class="text-2xl font-bold font-brand text-orange-600">$${formatPrice(product.price || 0)}</span>
+                                    <button data-id="${product.id}" class="add-to-cart-btn bg-orange-500 text-white px-5 py-2 rounded-lg hover:bg-orange-600 transition duration-300 font-brand text-lg shadow-md hover:shadow-lg">¡Lo quiero! 🍗</button>
+                                    <div class="quantity-controls hidden items-center bg-orange-200 rounded-full" data-controls-for="${product.id}">
+                                        <button class="decrease-quantity text-xl font-bold px-4 py-1 text-red-500" data-id="${product.id}">-</button>
+                                        <span class="quantity-display text-lg font-bold px-3">1</span>
+                                        <button class="increase-quantity text-xl font-bold px-4 py-1 text-green-500" data-id="${product.id}">+</button>
                                     </div>
                                 </div>
                             </div>
@@ -181,14 +184,14 @@
                 const addBtn = card.querySelector('.add-to-cart-btn');
                 const controls = card.querySelector('.quantity-controls');
                 if (quantity > 0) {
-                    card.classList.add('ring-2', 'ring-indigo-500');
+                    card.classList.add('ring-4', 'ring-orange-400');
                     addBtn.classList.add('hidden');
                     controls.classList.remove('hidden');
                     controls.classList.add('flex');
                     card.querySelector('.quantity-display').textContent = quantity;
                     if(productsCache[productId]) { total += productsCache[productId].price * quantity; }
                 } else {
-                    card.classList.remove('ring-2', 'ring-indigo-500');
+                    card.classList.remove('ring-4', 'ring-orange-400');
                     addBtn.classList.remove('hidden');
                     controls.classList.add('hidden');
                     controls.classList.remove('flex');
@@ -239,8 +242,9 @@
                 document.getElementById('order-number').textContent = orderNumber;
                 const summaryEl = document.getElementById('order-summary-modal');
                 summaryEl.innerHTML = orderItems.map(item => `<p>${item.quantity} x ${item.productName} - $${formatPrice(item.price * item.quantity)}</p>`).join('');
-                summaryEl.innerHTML += `<p class="font-bold mt-2">Total: $${formatPrice(total)}</p>`;
+                summaryEl.innerHTML += `<p class="font-bold font-brand mt-2">Total: $${formatPrice(total)}</p>`;
                 document.getElementById('order-confirmation-modal').classList.remove('hidden');
+                document.querySelector('#order-confirmation-modal > div').classList.remove('animate-pulse');
                 cart = {};
                 updateUI();
             } catch (error) { console.error("Error creating order: ", error); alert('Hubo un error al procesar tu pedido.'); }
@@ -248,6 +252,8 @@
         
         document.getElementById('close-confirmation-modal').addEventListener('click', () => {
             document.getElementById('order-confirmation-modal').classList.add('hidden');
+            document.querySelector('#order-confirmation-modal > div').classList.add('animate-pulse');
+
         });
 
         function getStatusColor(status) {
@@ -259,28 +265,39 @@
             }
         }
         
-        document.getElementById('track-order-btn').addEventListener('click', async () => {
-            const orderNumber = document.getElementById('track-order-input').value.trim();
-            const resultDiv = document.getElementById('order-status-result');
-            if (!orderNumber) {
-                resultDiv.innerHTML = `<p class="text-red-500">Por favor, ingresa un número de pedido.</p>`;
-                return;
+        document.getElementById('user-orders-list').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('recent-order-btn')) {
+                const orderNumber = e.target.dataset.orderNumber;
+                trackRecentOrder(orderNumber);
             }
+        });
+
+        async function trackRecentOrder(orderNumber) {
+            const resultDiv = document.getElementById('recent-order-status-result');
+            if (!orderNumber) return;
+
+            resultDiv.innerHTML = `<p class="text-amber-700 p-4">Consultando tu pollito... 🐔</p>`;
             const q = query(orderCollection, where("orderNumber", "==", orderNumber));
             const querySnapshot = await getDocs(q);
+
             if (querySnapshot.empty) {
-                resultDiv.innerHTML = `<p class="text-red-500">No se encontró ningún pedido con ese número.</p>`;
+                resultDiv.innerHTML = `<p class="text-red-500 font-bold p-4">Hmm... 🧐 no encontramos ese número de pedido.</p>`;
             } else {
                 const order = querySnapshot.docs[0].data();
+                let statusEmoji = '🧐';
+                if(order.status === 'Pendiente de Pago') statusEmoji = '💰';
+                if(order.status === 'Pendiente de Entrega') statusEmoji = '🍳';
+                if(order.status === 'Entregado') statusEmoji = '🎉';
+
                 resultDiv.innerHTML = `
                     <div class="p-4 rounded-md border ${getStatusColor(order.status).replace('bg-', 'border-').replace('-200', '-400')} ${getStatusColor(order.status)}">
-                        <p><strong>Estado del pedido ${order.orderNumber}:</strong> 
-                           <span class="font-bold">${order.status}</span>
+                        <p class="font-brand text-lg"><strong>Estado del pedido ${order.orderNumber}:</strong> 
+                           <span class="font-bold">${statusEmoji} ${order.status}</span>
                         </p>
                     </div>
                 `;
             }
-        });
+        }
     </script>
 </body>
 </html>
