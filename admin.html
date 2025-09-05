@@ -15,6 +15,14 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
+        #camera-view {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            background-color: #000;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -81,14 +89,14 @@
         </section>
     </main>
 
-    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 overflow-y-auto p-4">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-full overflow-y-auto">
             <h2 id="modal-title" class="text-2xl font-bold mb-6">Agregar Producto</h2>
             <form id="product-form">
                 <input type="hidden" id="product-id">
                 <div class="mb-4">
                     <label for="product-name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    <input type="text" id="product-name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
                 </div>
                 <div class="mb-4">
                     <label for="product-description" class="block text-sm font-medium text-gray-700">Descripción</label>
@@ -96,37 +104,31 @@
                 </div>
                 <div class="mb-4">
                     <label for="product-price" class="block text-sm font-medium text-gray-700">Precio</label>
-                    <input type="number" id="product-price" min="0" step="0.01" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm" required>
+                    <input type="number" id="product-price" min="0" step="0.01" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
                 </div>
-                <!-- Nuevo campo de imagen -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700">Imagen del Producto</label>
-                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                        <div class="space-y-1 text-center">
-                             <img id="image-preview" src="" class="mx-auto h-24 w-auto mb-4 hidden" alt="Vista previa">
-                             <svg id="image-icon" class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                             </svg>
-                            <div class="flex text-sm text-gray-600">
-                                <label for="product-image-file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                    <span>Sube un archivo</span>
-                                    <input id="product-image-file" type="file" class="sr-only" accept="image/*">
-                                </label>
-                                <p class="pl-1">o</p>
-                                <button type="button" id="open-camera-btn" class="ml-1 relative bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">usa la cámara</button>
-                            </div>
-                            <p class="text-xs text-gray-500">PNG, JPG hasta 1MB</p>
-                        </div>
+                    <img id="image-preview" class="mt-2 w-full rounded-md object-cover h-48 hidden bg-gray-100">
+                    <input type="file" id="image-file-input" class="hidden" accept="image/*">
+                    <div class="flex space-x-2 mt-2">
+                        <button type="button" id="select-file-btn" class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 text-sm"><i class="fas fa-upload mr-2"></i>Examinar</button>
+                        <button type="button" id="use-camera-btn" class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 text-sm"><i class="fas fa-camera mr-2"></i>Cámara</button>
                     </div>
                 </div>
-                <div id="camera-view" class="hidden my-4">
-                    <video id="camera-stream" class="w-full rounded-md" autoplay playsinline></video>
-                    <button type="button" id="capture-btn" class="mt-2 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">Capturar Foto</button>
+                <div id="camera-container" class="hidden mb-4">
+                    <video id="camera-view" autoplay playsinline></video>
                     <canvas id="camera-canvas" class="hidden"></canvas>
+                    <div class="flex space-x-2 mt-2">
+                         <button type="button" id="capture-btn" class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"><i class="fas fa-camera-retro mr-2"></i>Capturar</button>
+                         <button type="button" id="cancel-camera-btn" class="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"><i class="fas fa-times mr-2"></i>Cancelar</button>
+                    </div>
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button type="button" id="cancel-product-modal" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400">Cancelar</button>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Guardar</button>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700" id="save-product-btn">
+                        <span id="save-spinner" class="hidden"><i class="fas fa-spinner fa-spin"></i></span>
+                        <span id="save-text">Guardar</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -135,7 +137,8 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -149,12 +152,15 @@
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         const productCollection = collection(db, 'products');
         const orderCollection = collection(db, 'orders');
 
         const views = document.querySelectorAll('.view');
         const navLinks = document.querySelectorAll('.nav-link');
+        let currentImageFile = null;
+        let cameraStream = null;
 
         function showView(hash) {
             const id = (hash || '#productos').substring(1) + '-view';
@@ -195,10 +201,10 @@
                     adminProductList.innerHTML += `
                         <div class="flex items-center justify-between p-3 border-b">
                             <div class="flex items-center min-w-0">
-                                <img src="${product.imageUrl || 'https://placehold.co/100/e2e8f0/64748b?text=Img'}" class="w-12 h-12 object-cover rounded-md mr-4 flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/100/e2e8f0/64748b?text=Img';">
-                                <div class="min-w-0">
+                                <img src="${product.imageUrl || 'https://placehold.co/100/e2e8f0/64748b?text=Img'}" class="w-12 h-12 object-cover rounded-md mr-4" onerror="this.onerror=null;this.src='https://placehold.co/100/e2e8f0/64748b?text=Img';">
+                                <div class="truncate">
                                     <p class="font-semibold truncate">${product.name}</p>
-                                    <p class="text-sm text-gray-500">$${product.price.toFixed(2)}</p>
+                                    <p class="text-sm text-gray-500">$${(product.price || 0).toFixed(2)}</p>
                                 </div>
                             </div>
                             <div class="space-x-2 flex-shrink-0">
@@ -214,94 +220,132 @@
         const productModal = document.getElementById('product-modal');
         const productForm = document.getElementById('product-form');
         const imagePreview = document.getElementById('image-preview');
-        const imageIcon = document.getElementById('image-icon');
-        const imageFileInput = document.getElementById('product-image-file');
-        const openCameraBtn = document.getElementById('open-camera-btn');
-        const cameraView = document.getElementById('camera-view');
-        const video = document.getElementById('camera-stream');
-        const canvas = document.getElementById('camera-canvas');
-        const captureBtn = document.getElementById('capture-btn');
-        let stream = null;
 
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            cameraView.classList.add('hidden');
-        }
-
-        openCameraBtn.addEventListener('click', async () => {
-            stopCamera();
-            cameraView.classList.remove('hidden');
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-            } catch (err) {
-                console.error("Error accessing camera: ", err);
-                cameraView.classList.add('hidden');
-                alert('No se pudo acceder a la cámara. Asegúrate de dar los permisos necesarios.');
-            }
-        });
-
-        captureBtn.addEventListener('click', () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/jpeg');
-            imagePreview.src = dataUrl;
-            imagePreview.classList.remove('hidden');
-            imageIcon.classList.add('hidden');
-            stopCamera();
-        });
-
-        imageFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    imagePreview.src = event.target.result;
-                    imagePreview.classList.remove('hidden');
-                    imageIcon.classList.add('hidden');
-                    stopCamera();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.getElementById('add-product-btn').addEventListener('click', () => {
+        function resetProductModal() {
             productForm.reset();
             document.getElementById('product-id').value = '';
-            document.getElementById('modal-title').textContent = 'Agregar Producto';
             imagePreview.src = '';
             imagePreview.classList.add('hidden');
-            imageIcon.classList.remove('hidden');
+            currentImageFile = null;
             stopCamera();
+            document.getElementById('camera-container').classList.add('hidden');
+            toggleSaveButton(false);
+        }
+
+        document.getElementById('add-product-btn').addEventListener('click', () => {
+            resetProductModal();
+            document.getElementById('modal-title').textContent = 'Agregar Producto';
             productModal.classList.remove('hidden');
         });
 
         document.getElementById('cancel-product-modal').addEventListener('click', () => {
             productModal.classList.add('hidden');
+            resetProductModal();
+        });
+        
+        // --- Image and Camera Logic ---
+        document.getElementById('select-file-btn').addEventListener('click', () => {
+            document.getElementById('image-file-input').click();
+        });
+
+        document.getElementById('image-file-input').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                currentImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+                stopCamera();
+            }
+        });
+
+        document.getElementById('use-camera-btn').addEventListener('click', async () => {
+            document.getElementById('camera-container').classList.remove('hidden');
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('camera-view');
+                video.srcObject = cameraStream;
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                alert('No se pudo acceder a la cámara. Asegúrate de dar los permisos necesarios.');
+                document.getElementById('camera-container').classList.add('hidden');
+            }
+        });
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+                document.getElementById('camera-container').classList.add('hidden');
+            }
+        }
+        document.getElementById('cancel-camera-btn').addEventListener('click', stopCamera);
+
+        document.getElementById('capture-btn').addEventListener('click', () => {
+            const video = document.getElementById('camera-view');
+            const canvas = document.getElementById('camera-canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            imagePreview.src = canvas.toDataURL('image/jpeg');
+            imagePreview.classList.remove('hidden');
+            
+            canvas.toBlob(blob => {
+                currentImageFile = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
+            }, 'image/jpeg');
+            
             stopCamera();
         });
 
+        function toggleSaveButton(isLoading) {
+            document.getElementById('save-text').classList.toggle('hidden', isLoading);
+            document.getElementById('save-spinner').classList.toggle('hidden', !isLoading);
+            document.getElementById('save-product-btn').disabled = isLoading;
+        }
+
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            toggleSaveButton(true);
+
             const id = document.getElementById('product-id').value;
+            let imageUrl = imagePreview.src.startsWith('http') ? imagePreview.src : '';
+
+            if (currentImageFile) {
+                try {
+                    const storageRef = ref(storage, `products/${Date.now()}_${currentImageFile.name}`);
+                    const snapshot = await uploadBytes(storageRef, currentImageFile);
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                } catch(error) {
+                    console.error("Error uploading image:", error);
+                    alert("Hubo un error al subir la imagen.");
+                    toggleSaveButton(false);
+                    return;
+                }
+            }
+
             const productData = {
                 name: document.getElementById('product-name').value,
                 description: document.getElementById('product-description').value,
-                price: parseFloat(document.getElementById('product-price').value),
-                imageUrl: imagePreview.src
+                price: parseFloat(document.getElementById('product-price').value) || 0,
+                imageUrl: imageUrl
             };
+
             try {
-                if (id) { await updateDoc(doc(db, 'products', id), productData); } 
-                else { await addDoc(productCollection, productData); }
+                if (id) { 
+                    await updateDoc(doc(db, 'products', id), productData); 
+                } else { 
+                    await addDoc(productCollection, productData); 
+                }
                 productModal.classList.add('hidden');
-                stopCamera();
+                resetProductModal();
             } catch (error) { 
-                console.error("Error al guardar producto:", error); 
-                stopCamera();
+                console.error("Error saving product:", error);
+                toggleSaveButton(false);
             }
         });
 
@@ -310,23 +354,18 @@
             const deleteBtn = e.target.closest('.delete-product-btn');
             
             if (editBtn) {
+                resetProductModal();
                 const id = editBtn.dataset.id;
                 const productSnap = await getDoc(doc(db, 'products', id));
                 if (productSnap.exists()) {
                     const product = productSnap.data();
                     document.getElementById('product-id').value = id;
-                    document.getElementById('product-name').value = product.name;
-                    document.getElementById('product-description').value = product.description;
-                    document.getElementById('product-price').value = product.price;
-                    
+                    document.getElementById('product-name').value = product.name || '';
+                    document.getElementById('product-description').value = product.description || '';
+                    document.getElementById('product-price').value = product.price || '';
                     if (product.imageUrl) {
                         imagePreview.src = product.imageUrl;
                         imagePreview.classList.remove('hidden');
-                        imageIcon.classList.add('hidden');
-                    } else {
-                        imagePreview.src = '';
-                        imagePreview.classList.add('hidden');
-                        imageIcon.classList.remove('hidden');
                     }
                     document.getElementById('modal-title').textContent = 'Editar Producto';
                     productModal.classList.remove('hidden');
@@ -409,5 +448,4 @@
     </script>
 </body>
 </html>
-
 
