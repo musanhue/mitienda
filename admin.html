@@ -38,7 +38,7 @@
         <nav class="container mx-auto px-4 lg:px-6 py-2">
             <div class="flex items-center justify-between">
                 <a href="#" class="flex items-center space-x-3">
-                    <img src="https://drive.google.com/uc?export=view&id=14MZrb8xTtJFd285xl3aGlagy3qEnpq3M" alt="Logo Por Su Pollo" class="h-12 w-auto">
+                    <img id="header-logo" src="https://firebasestorage.googleapis.com/v0/b/mitienda-afb9a.appspot.com/o/WhatsApp%20Image%202025-08-26%20at%2010.30.35.jpeg?alt=media&token=446c962a-b2e7-4618-867f-c9cb7f258acc" alt="Logo Por Su Pollo" class="h-12 w-auto">
                     <span class="text-2xl font-brand text-amber-800">Admin Panel</span>
                 </a>
                 <div class="hidden md:flex items-center space-x-6 font-brand text-lg">
@@ -190,6 +190,7 @@
             })
         }
 
+        // --- AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log("Signed in anonymously:", user.uid);
@@ -367,7 +368,7 @@
             toggleSaveButton(true);
             
             let imageUrl = document.getElementById('image-preview').src;
-            if (imageUrl.startsWith('blob:') || imageUrl.startsWith('data:image')) {
+            if (imageUrl.startsWith('blob:') || imageUrl.startsWith('data:image') || imageUrl.startsWith('https://placehold.co')) {
                  imageUrl = '';
             }
             
@@ -378,7 +379,7 @@
                     imageUrl = await getDownloadURL(snapshot.ref);
                 } catch (storageError) {
                     console.error("Firebase Storage error:", storageError);
-                    alert(`ERROR: No se pudo subir la imagen. Por favor, asegúrate de que las reglas de Firebase Storage estén configuradas para permitir lectura y escritura. Error: ${storageError.code}`);
+                    alert(`ERROR: No se pudo subir la imagen. Por favor, asegúrate de que las reglas de seguridad de Firebase Storage estén configuradas como 'allow read, write;'. Código de error: ${storageError.code}`);
                     toggleSaveButton(false);
                     return;
                 }
@@ -447,7 +448,12 @@
                             const imageRef = ref(storage, productSnap.data().imageUrl);
                             await deleteObject(imageRef);
                         } catch (error) {
-                            console.error("Could not delete image, but proceeding with doc deletion:", error);
+                            console.error("Could not delete image, but proceeding with doc deletion:", error.code);
+                            if(error.code === 'storage/object-not-found'){
+                                console.log("Image not found in storage, might have been deleted already.");
+                            } else {
+                                alert("No se pudo eliminar la imagen, pero se eliminará el producto.");
+                            }
                         }
                     }
                     await deleteDoc(doc(db, 'products', id));
