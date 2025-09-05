@@ -38,7 +38,7 @@
         <nav class="container mx-auto px-4 lg:px-6 py-2">
             <div class="flex items-center justify-between">
                 <a href="#" class="flex items-center space-x-3">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/mitienda-afb9a.appspot.com/o/WhatsApp%20Image%202025-08-26%20at%2010.30.35.jpeg?alt=media" alt="Logo Por Su Pollo" class="h-12 w-auto">
+                    <img src="https://drive.google.com/uc?export=view&id=14MZrb8xTtJFd285xl3aGlagy3qEnpq3M" alt="Logo Por Su Pollo" class="h-12 w-auto">
                     <span class="text-2xl font-brand text-amber-800">Admin Panel</span>
                 </a>
                 <div class="hidden md:flex items-center space-x-6 font-brand text-lg">
@@ -151,18 +151,20 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyDuRkOZ6cSt1ScnqYbn9EnQeYXUCofDYHc",
-  authDomain: "mitienda-afb9a.firebaseapp.com",
-  projectId: "mitienda-afb9a",
-  storageBucket: "mitienda-afb9a.firebasestorage.app",
-  messagingSenderId: "551425772249"
+          authDomain: "mitienda-afb9a.firebaseapp.com",
+          projectId: "mitienda-afb9a",
+          storageBucket: "mitienda-afb9a.firebasestorage.app",
+          messagingSenderId: "551425772249"
         };
         
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
 
@@ -188,6 +190,31 @@
             })
         }
 
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Signed in anonymously:", user.uid);
+                initializePage();
+            } else {
+                console.log("User is signed out. Attempting to sign in anonymously.");
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Anonymous sign-in failed:", error);
+                    alert("No se pudo conectar con el servidor. Por favor, refresca la página.");
+                });
+            }
+        });
+
+        function initializePage() {
+            showView(window.location.hash || '#productos');
+            fetchAdminProducts();
+            listenToOrders();
+        }
+
+        window.addEventListener('hashchange', () => showView(window.location.hash));
+        
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -199,19 +226,9 @@
             });
         });
 
-        window.addEventListener('hashchange', () => showView(window.location.hash));
-        document.addEventListener('DOMContentLoaded', () => {
-             showView(window.location.hash || '#productos');
-             fetchAdminProducts();
-             listenToOrders();
-        });
-        
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
         function fetchAdminProducts() {
-            onSnapshot(productCollection, (snapshot) => {
+            const q = query(productCollection, orderBy('name'));
+            onSnapshot(q, (snapshot) => {
                 const adminProductList = document.getElementById('admin-product-list');
                 adminProductList.innerHTML = '';
                  if(snapshot.empty) {
@@ -270,6 +287,10 @@
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
                         const maxWidth = 1024;
+                        if (img.width <= maxWidth) {
+                             resolve(event.target.result);
+                             return;
+                        }
                         const scaleFactor = maxWidth / img.width;
                         canvas.width = maxWidth;
                         canvas.height = img.height * scaleFactor;
@@ -346,7 +367,7 @@
             toggleSaveButton(true);
             
             let imageUrl = document.getElementById('image-preview').src;
-             if (imageUrl.startsWith('blob:') || imageUrl.startsWith('data:image')) {
+            if (imageUrl.startsWith('blob:') || imageUrl.startsWith('data:image')) {
                  imageUrl = '';
             }
             
@@ -357,7 +378,7 @@
                     imageUrl = await getDownloadURL(snapshot.ref);
                 } catch (storageError) {
                     console.error("Firebase Storage error:", storageError);
-                    alert(`ERROR DE PERMISOS: No se pudo subir la imagen. Por favor, revisa que las reglas de seguridad de Firebase Storage estén correctas (allow read, write;). Error: ${storageError.code}`);
+                    alert(`ERROR: No se pudo subir la imagen. Por favor, asegúrate de que las reglas de Firebase Storage estén configuradas para permitir lectura y escritura. Error: ${storageError.code}`);
                     toggleSaveButton(false);
                     return;
                 }
@@ -419,7 +440,16 @@
             }
             if (deleteBtn) {
                 const id = deleteBtn.dataset.id;
-                if (confirm('¿Seguro que quieres eliminar este producto? 🐔')) {
+                const productSnap = await getDoc(doc(db, 'products', id));
+                 if (confirm('¿Seguro que quieres eliminar este producto? 🐔')) {
+                    if (productSnap.exists() && productSnap.data().imageUrl) {
+                        try {
+                            const imageRef = ref(storage, productSnap.data().imageUrl);
+                            await deleteObject(imageRef);
+                        } catch (error) {
+                            console.error("Could not delete image, but proceeding with doc deletion:", error);
+                        }
+                    }
                     await deleteDoc(doc(db, 'products', id));
                 }
             }
@@ -471,7 +501,7 @@
                      allOrdersList.innerHTML += `
                         <tr class="border-b border-orange-100 hover:bg-orange-50">
                             <td class="p-3 font-mono">#${order.orderNumber}</td> <td class="p-3">${orderDate}</td> <td class="p-3 font-semibold">$${formatPrice(order.total)}</td>
-                            <td class="p-3"><span class="px-2 py-1 text-xs rounded-full font-semibold ${getStatusClass(order.status).text} ${getStatusClass(order.status).bg}">${order.status}</span></td>
+                            <td class="p-3"><span class="px-2 py-1 text-xs rounded-full font-semibold ${getStatusClass(order.status).bg} ${getStatusClass(order.status).text}">${order.status}</span></td>
                             <td class="p-3"><details><summary class="cursor-pointer text-orange-600 text-sm font-semibold">Ver</summary><div class="text-xs mt-1">${order.items.map(item => `<p>${item.quantity} x ${item.productName}</p>`).join('')}</div></details></td>
                         </tr>`;
 
